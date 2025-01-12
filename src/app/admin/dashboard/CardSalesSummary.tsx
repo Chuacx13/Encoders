@@ -11,6 +11,10 @@ import {
 } from "recharts";
 import { mockSalesSummary } from "./mockData";
 
+import { Card } from "antd";
+import { Text } from "@/app/(components)/Text";
+import { LineChartOutlined } from "@ant-design/icons";
+
 const CardSalesSummary = () => {
   const salesData = mockSalesSummary || [];
   const isLoading = false;
@@ -43,19 +47,30 @@ const CardSalesSummary = () => {
   }
 
   return (
-    <div className="row-span-3 xl:row-span-6 bg-white shadow-md rounded-2xl flex flex-col justify-between text-gray-700">
+    <Card
+      style={{
+        height: "100%",
+      }}
+      title={
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <LineChartOutlined />{" "}
+          <Text size="sm" style={{ marginLeft: ".7rem" }}>
+            Sales Summary
+          </Text>
+        </div>
+      }
+    >
+      {" "}
       {isLoading ? (
         <div className="m-5">Loading...</div>
       ) : (
         <>
-          {/* HEADER */}
-          <div>
-            <h2 className="text-lg font-semibold mb-2 px-7 pt-5">
-              Sales Summary
-            </h2>
-            <hr />
-          </div>
-
           {/* BODY */}
           <div>
             {/* BODY HEADER */}
@@ -144,7 +159,7 @@ const CardSalesSummary = () => {
           </div>
         </>
       )}
-    </div>
+    </Card>
   );
 };
 
