@@ -20,8 +20,8 @@ export default function LoginPage() {
     try {
       // Firebase login
       await signInWithEmailAndPassword(auth, email, password);
-      const token = await auth.currentUser.getIdTokenResult();
-      if (token.claims.admin) {
+      const token = await auth.currentUser?.getIdTokenResult();
+      if (token?.claims.admin) {
         router.push('/admin');
       } else {
         router.push('/resident');
