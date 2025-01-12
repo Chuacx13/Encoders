@@ -6,7 +6,7 @@ interface ResidentLayoutProps {
   children: ReactNode;
 }
 
-export default function AdminLayout({ children }: ResidentLayoutProps) {
+export default function ResidentLayout({ children }: ResidentLayoutProps) {
   return (
     <div className="flex h-screen">
       <Sidebar userType="resident" />
