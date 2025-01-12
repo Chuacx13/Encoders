@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaHome, FaCog, FaUser, FaUsers, FaBars } from "react-icons/fa";
 
-// Define props interface
 interface SidebarProps {
   userType: "admin" | "resident";
 }
@@ -29,11 +28,10 @@ export default function Sidebar({ userType }: SidebarProps) {
 
   return (
     <div
-      className={`bg-gray-700 text-white min-h-screen flex flex-col ${
-        isCollapsed ? "w-20" : "w-52"
+      className={`bg-gray-700 text-white h-screen flex flex-col transition-width duration-300 ${
+        isCollapsed ? "w-20" : "w-64"
       }`}
     >
-      {/* Toggle Button */}
       <div className="flex justify-center my-4">
         <button
           className="text-white p-2 rounded-md bg-gray-700 hover:bg-gray-600"
