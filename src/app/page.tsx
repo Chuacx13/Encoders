@@ -1,10 +1,13 @@
 "use client"; 
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
+import Link from "next/link";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,9 +20,20 @@ export default function LoginPage() {
     try {
       // Firebase login
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
+      const token = await auth.currentUser.getIdTokenResult();
+      if (token.claims.admin) {
+        router.push('/admin');
+      } else {
+        router.push('/user');
+      }
     } catch (err: any) {
-      setError(err.message);
+      if (err.code === 'auth/wrong-password') {
+        setError('Username and Password do not match.');
+      } else if (err.code === 'auth/user-not-found' || err.response.status === 404) {
+        setError('User does not exist. Sign up first!');
+      } else {
+        setError(err.message);
+      }
     }
   };
 
@@ -65,13 +79,10 @@ export default function LoginPage() {
           >
             Login
           </button>
+          <p className='flex items-center justify-center'> Forgot your password?  
+            <Link href='/forgot-password' className="underline"> Reset it here! </Link> 
+          </p>
         </form>
-        <p className="mt-6 text-sm text-center text-gray-600 dark:text-gray-400">
-          Don’t have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline dark:text-blue-400">
-            Sign up
-          </a>
-        </p>
       </div>
     </div>
   );
