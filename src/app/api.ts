@@ -1,14 +1,6 @@
 import { db } from "@/firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-
-interface Voucher {
-  id: number;
-  name: string;
-  value: string;
-  validUntil: string;
-  status: string;
-  redeemedOn?: string | null;
-}
+import { Item, Voucher } from "@/app/interfaces";
 
 export const fetchUserVouchers = async (uid: string): Promise<Voucher[]> => {
   try {
@@ -53,3 +45,38 @@ export const updateVoucherStatus = async (voucherId: number, newStatus: string) 
   }
 };
 
+export const fetchUserItems = async (uid: string): Promise<Item[]> => {
+  try {
+    // Get the user document from the "residents" collection
+    const userDocRef = doc(db, "residents", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      const purchasedItems: number[] = userData.purchasedItems || [];
+      const fetchedItems: Item[] = [];
+
+      // Fetch each item from the "items" collection based on purchasedItems array
+      for (const itemId of purchasedItems) {
+        const itemDocRef = doc(db, "items", `item${itemId}`);
+        const itemDocSnap = await getDoc(itemDocRef);
+
+        if (itemDocSnap.exists()) {
+          const itemData = itemDocSnap.data() as Omit<Item, "id">;
+          fetchedItems.push({
+            id: itemId,
+            ...itemData,
+          });
+        }
+      }
+
+      return fetchedItems;
+    } else {
+      console.error("No user document found.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching user items:", error);
+    return [];
+  }
+};

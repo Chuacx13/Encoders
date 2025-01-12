@@ -5,15 +5,7 @@ import { Text } from "@/app/(components)/Text";
 import { auth } from "@/firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { fetchUserVouchers, updateVoucherStatus } from "@/app/api";
-
-interface Voucher {
-  id: number;
-  name: string;
-  value: string;
-  validUntil: string;
-  status: string;
-  redeemedOn?: string | null;
-}
+import { Voucher } from "@/app/interfaces";
 
 const CardAvailableVouchers = () => {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
