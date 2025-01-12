@@ -48,13 +48,6 @@ export interface Product {
     expenseByCategorySummary: ExpenseByCategorySummary[];
   }
   
-  export interface User {
-    userId: string;
-    name: string;
-    email: string;
-  }
-  
-
 // Mock data for Products
 export const mockProducts: Product[] = [
     {
@@ -159,20 +152,5 @@ export const mockProducts: Product[] = [
     expenseByCategorySummary: mockExpenseByCategorySummary,
   };
   
-  // Mock data for Users
-  export const mockUsers: User[] = [
-    {
-      userId: "user1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-    },
-    {
-      userId: "user2",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-    },
-  ];
-  
   console.log(mockDashboardMetrics);
-  console.log(mockUsers);
   
