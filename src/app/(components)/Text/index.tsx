@@ -14,6 +14,7 @@ type TextProps = {
     | "xxhuge";
 } & React.ComponentProps<typeof Typography.Text>;
 
-export const Text = ({ size = "sm", children, ...rest }: TextProps) => {
+// Remove size = "sm"
+export const Text = ({ children, ...rest }: TextProps) => {
   return <Typography.Text {...rest}>{children}</Typography.Text>;
 };

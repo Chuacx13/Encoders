@@ -26,6 +26,7 @@ export default function LoginPage() {
       } else {
         router.push('/resident');
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.code === 'auth/wrong-password') {
         setError('Username and Password do not match.');
