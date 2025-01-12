@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FaHome, FaCog, FaUser, FaUsers, FaBars } from "react-icons/fa";
+import { IoPersonAdd } from "react-icons/io5";
+
 
 interface SidebarProps {
   userType: "admin" | "resident";
@@ -12,6 +14,7 @@ const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: <FaHome /> },
   { href: "/admin/residents", label: "Manage Residents", icon: <FaUsers /> },
   { href: "/admin/settings", label: "Settings", icon: <FaCog /> },
+  { href: "/admin/create-accounts", label: "Create Accounts", icon: <IoPersonAdd />}
 ];
 
 const residentLinks = [
