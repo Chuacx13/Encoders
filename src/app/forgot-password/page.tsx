@@ -17,6 +17,7 @@ const ForgotPassword = () => {
     try {
       await sendPasswordResetEmail(auth, email);
       setMessage("Password reset link sent! Check your email.");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError("Failed to send password reset email. Please try again.");
       console.error(err);
