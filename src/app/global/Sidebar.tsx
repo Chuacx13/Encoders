@@ -2,17 +2,30 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaHome, FaCog, FaUser, FaBars } from "react-icons/fa";
+import { FaHome, FaCog, FaUser, FaUsers, FaBars } from "react-icons/fa";
 
-const links = [
-  { href: "/dashboard", label: "Home", icon: <FaHome /> },
-  { href: "/dashboard/settings", label: "Settings", icon: <FaCog /> },
-  { href: "/dashboard/profile", label: "Profile", icon: <FaUser /> },
+// Define props interface
+interface SidebarProps {
+  userType: "admin" | "user";
+}
+
+const adminLinks = [
+  { href: "/admin", label: "Dashboard", icon: <FaHome /> },
+  { href: "/admin/users", label: "Manage Users", icon: <FaUsers /> },
+  { href: "/admin/settings", label: "Settings", icon: <FaCog /> },
 ];
 
-export default function Sidebar() {
+const userLinks = [
+  { href: "/user", label: "Dashboard", icon: <FaHome /> },
+  { href: "/user/profile", label: "Profile", icon: <FaUser /> },
+  { href: "/user/settings", label: "Settings", icon: <FaCog /> },
+];
+
+export default function Sidebar({ userType }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeLink, setActiveLink] = useState("/dashboard");
+
+  const links = userType === "admin" ? adminLinks : userLinks;
 
   return (
     <div
@@ -42,7 +55,7 @@ export default function Sidebar() {
             <Link
               href={link.href}
               onClick={() => setActiveLink(link.href)}
-              className={`flex items-center px-7 py-2 rounded-md hover:bg-gray-600 ${
+              className={`flex items-center px-3 py-2 rounded-md hover:bg-gray-600 ${
                 activeLink === link.href ? "bg-gray-600" : ""
               } transition-colors duration-300`}
             >
