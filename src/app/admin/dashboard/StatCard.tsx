@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import React from "react";
+import React, { JSX } from "react";
 import { Card } from "antd";
 import { Text } from "@/app/(components)/Text";
 // import { LineChartOutlined } from "@ant-design/icons";
