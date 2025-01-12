@@ -2,6 +2,7 @@ import { db } from "@/firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Item, Voucher } from "@/app/interfaces";
 
+//resident API calls
 export const fetchUserVouchers = async (uid: string): Promise<Voucher[]> => {
   try {
     const userDocRef = doc(db, "residents", uid);

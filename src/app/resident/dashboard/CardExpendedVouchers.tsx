@@ -50,7 +50,7 @@ const CardExpendedVouchers = () => {
           }}
         >
           <GiftOutlined />
-          <Text size="sm" style={{ marginLeft: "0.7rem"}}>Q
+          <Text size="sm" style={{ marginLeft: "0.7rem"}}>
             Expended Vouchers
           </Text>
         </div>
