@@ -9,7 +9,7 @@ interface ResidentLayoutProps {
 export default function AdminLayout({ children }: ResidentLayoutProps) {
   return (
     <div className="flex h-screen">
-      <Sidebar userType="admin" />
+      <Sidebar userType="resident" />
       <div className="flex flex-col flex-1">
         <Topbar userType="resident" />
         <main className="flex-1 p-8 bg-gray-100 overflow-auto">
