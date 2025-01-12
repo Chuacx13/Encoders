@@ -1,12 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "antd";
 import { GiftOutlined } from "@ant-design/icons";
 import { Text } from "@/app/(components)/Text";
-import { mockVouchers } from "./mockVouchers";
+import { auth } from "@/firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { fetchUserVouchers } from "@/app/api"; 
+
+interface Voucher {
+  id: number;
+  name: string;
+  value: string;
+  validUntil: string;
+  status: string;
+  redeemedOn?: string | null;
+}
 
 const CardAvailableVouchers = () => {
-  const vouchers = mockVouchers.filter((voucher) => voucher.status === "available");
-  const isLoading = false;
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loadVouchers(user.uid);
+      } else {
+        console.error("No user is signed in.");
+        setIsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const loadVouchers = async (uid: string) => {
+    setIsLoading(true);
+    const allVouchers = await fetchUserVouchers(uid);
+    const redeemedVouchers = allVouchers.filter(
+      (voucher) => voucher.status === "redeemed"
+    );
+
+    setVouchers(redeemedVouchers);
+    setIsLoading(false);
+  };
 
   return (
     <Card
@@ -35,7 +70,7 @@ const CardAvailableVouchers = () => {
         <div className="overflow-auto h-full mb-6">
           {vouchers.map((voucher) => (
             <div
-              key={voucher.voucherId}
+              key={voucher.id}
               className="flex items-center justify-between gap-3 py-4 border-b"
             >
               <div className="flex flex-col gap-1">

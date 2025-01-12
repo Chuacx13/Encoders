@@ -4,6 +4,11 @@ import { ShoppingOutlined } from "@ant-design/icons";
 import { Text } from "@/app/(components)/Text";
 import { mockPurchaseHistory } from "./mockPurchaseHistory";
 
+const formatDate = (date: string | Date): string => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };  
+
 const CardPurchaseHistory = () => {
   const purchases = mockPurchaseHistory;
   const isLoading = false;
@@ -40,6 +45,9 @@ const CardPurchaseHistory = () => {
               <div className="flex flex-col gap-1">
                 <div className="font-bold text-gray-700">{item.name}</div>
                 <div className="text-sm text-gray-500">Price: {item.price}</div>
+                <div className="text-sm text-gray-400">
+                  Date Purchased: {formatDate(item.datePurchased)}
+                </div>
               </div>
             </div>
           ))}
