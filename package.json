@@ -13,11 +13,8 @@
     "@next/font": "^14.2.15",
     "antd": "^5.23.0",
     "firebase": "^11.1.0",
-<<<<<<< HEAD
     "firebase-admin": "^13.0.2",
-=======
     "lucide-react": "^0.471.0",
->>>>>>> 05ca0485c662f8db8f6aa1ea55a6da3125214de4
     "next": "15.1.4",
     "numeral": "^2.0.6",
     "react": "^19.0.0",
