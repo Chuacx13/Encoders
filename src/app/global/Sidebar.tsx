@@ -6,26 +6,26 @@ import { FaHome, FaCog, FaUser, FaUsers, FaBars } from "react-icons/fa";
 
 // Define props interface
 interface SidebarProps {
-  userType: "admin" | "user";
+  userType: "admin" | "resident";
 }
 
 const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: <FaHome /> },
-  { href: "/admin/users", label: "Manage Users", icon: <FaUsers /> },
+  { href: "/admin/residents", label: "Manage Residents", icon: <FaUsers /> },
   { href: "/admin/settings", label: "Settings", icon: <FaCog /> },
 ];
 
-const userLinks = [
-  { href: "/user", label: "Dashboard", icon: <FaHome /> },
-  { href: "/user/profile", label: "Profile", icon: <FaUser /> },
-  { href: "/user/settings", label: "Settings", icon: <FaCog /> },
+const residentLinks = [
+  { href: "/resident", label: "Dashboard", icon: <FaHome /> },
+  { href: "/resident/profile", label: "Profile", icon: <FaUser /> },
+  { href: "/resident/settings", label: "Settings", icon: <FaCog /> },
 ];
 
 export default function Sidebar({ userType }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeLink, setActiveLink] = useState("/dashboard");
 
-  const links = userType === "admin" ? adminLinks : userLinks;
+  const links = userType === "admin" ? adminLinks : residentLinks;
 
   return (
     <div

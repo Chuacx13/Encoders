@@ -7,8 +7,8 @@ export function middleware(req) {
 
   if (user?.role === "admin") {
     return NextResponse.redirect(new URL("/admin", req.url));
-  } else if (user?.role === "user") {
-    return NextResponse.redirect(new URL("/user", req.url));
+  } else if (user?.role === "resident") {
+    return NextResponse.redirect(new URL("/resident", req.url));
   }
 
   return NextResponse.next();
@@ -17,8 +17,8 @@ export function middleware(req) {
 function decodeToken(token) {
   if (token === "admin-token") {
     return { role: "admin" };
-  } else if (token === "user-token") {
-    return { role: "user" };
+  } else if (token === "resident-token") {
+    return { role: "resident" };
   }
   return null;
 }

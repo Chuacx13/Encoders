@@ -3,7 +3,7 @@ import avatar from "../../../public/avatar.png";
 
 // Define prop types using an interface
 interface TopbarProps {
-  userType: "admin" | "user";
+  userType: "admin" | "resident";
 }
 
 export default function Topbar({ userType }: TopbarProps) {
@@ -14,7 +14,7 @@ export default function Topbar({ userType }: TopbarProps) {
         <h1 className="text-xl font-bold">Muhammadiyah Welfare Home</h1>
       </div>
       <div className="flex items-center gap-4">
-        <span>{`Welcome, ${userType === "admin" ? "Admin" : "User"}!`}</span>
+        <span>{`Welcome, ${userType === "admin" ? "Admin" : "Resident"}!`}</span>
         <button className="bg-white text-blue-600 px-4 py-2 rounded-md hover:bg-gray-200">
           Logout
         </button>
