@@ -6,13 +6,15 @@ interface ResidentLayoutProps {
   children: ReactNode;
 }
 
-export default function ResidentLayout({ children }: ResidentLayoutProps) {
+export default function AdminLayout({ children }: ResidentLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Topbar userType="resident" />
-      <div className="flex flex-1">
-        <Sidebar userType="resident" />
-        <main className="flex-1 p-8 bg-gray-100">{children}</main>
+    <div className="flex h-screen">
+      <Sidebar userType="resident" />
+      <div className="flex flex-col flex-1">
+        <Topbar userType="resident" />
+        <main className="flex-1 p-8 bg-gray-100 overflow-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

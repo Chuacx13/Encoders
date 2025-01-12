@@ -8,11 +8,13 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Topbar userType="admin" />
-      <div className="flex flex-1">
-        <Sidebar userType="admin" />
-        <main className="flex-1 p-8 bg-gray-100">{children}</main>
+    <div className="flex h-screen">
+      <Sidebar userType="admin" />
+      <div className="flex flex-col flex-1">
+        <Topbar userType="admin" />
+        <main className="flex-1 p-8 bg-gray-100 overflow-auto">
+          {children}
+        </main>
       </div>
     </div>
   );
