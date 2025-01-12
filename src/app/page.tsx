@@ -24,7 +24,7 @@ export default function LoginPage() {
       if (token.claims.admin) {
         router.push('/admin');
       } else {
-        router.push('/user');
+        router.push('/resident');
       }
     } catch (err: any) {
       if (err.code === 'auth/wrong-password') {
