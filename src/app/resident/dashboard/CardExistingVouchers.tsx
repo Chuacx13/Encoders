@@ -1,12 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "antd";
 import { GiftOutlined } from "@ant-design/icons";
 import { Text } from "@/app/(components)/Text";
-import { mockVouchers } from "./mockVouchers";
+import { auth } from "@/firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { fetchUserVouchers } from "@/app/api";
+
+interface Voucher {
+  id: number;
+  name: string;
+  value: string;
+  validUntil: string;
+  status: string;
+  redeemedOn?: string | null;
+}
 
 const CardExistingVouchers = () => {
-  const vouchers = mockVouchers.filter((voucher) => voucher.status === "claimed");
-  const isLoading = false;
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loadVouchers(user.uid);
+      } else {
+        console.error("No user is signed in.");
+        setIsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const loadVouchers = async (uid: string) => {
+    setIsLoading(true);
+    const allVouchers = await fetchUserVouchers(uid);
+
+    const claimedVouchers = allVouchers.filter(
+      (voucher) => voucher.status === "claimed"
+    );
+
+    setVouchers(claimedVouchers);
+    setIsLoading(false);
+  };
 
   return (
     <Card
@@ -18,8 +54,7 @@ const CardExistingVouchers = () => {
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: "8px",
+            alignItems: "center"
           }}
         >
           <GiftOutlined />
@@ -32,11 +67,11 @@ const CardExistingVouchers = () => {
       {isLoading ? (
         <div className="m-5">Loading...</div>
       ) : (
-        <div className="overflow-auto h-full mb-6">
+        <div className="overflow-auto h-full">
           {vouchers.map((voucher) => (
             <div
-              key={voucher.voucherId}
-              className="flex items-center justify-between gap-3 py-4 border-b"
+              key={voucher.id}
+              className="flex items-center justify-between py-4 border-b"
             >
               <div className="flex flex-col gap-1">
                 <div className="font-bold text-gray-700">{voucher.name}</div>

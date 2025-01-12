@@ -4,7 +4,7 @@ import { GiftOutlined } from "@ant-design/icons";
 import { Text } from "@/app/(components)/Text";
 import { auth } from "@/firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { fetchUserVouchers } from "@/app/api"; 
+import { fetchUserVouchers, updateVoucherStatus } from "@/app/api";
 
 interface Voucher {
   id: number;
@@ -36,11 +36,23 @@ const CardAvailableVouchers = () => {
     setIsLoading(true);
     const allVouchers = await fetchUserVouchers(uid);
     const redeemedVouchers = allVouchers.filter(
-      (voucher) => voucher.status === "redeemed"
+      (voucher) => voucher.status === "available"
     );
 
     setVouchers(redeemedVouchers);
     setIsLoading(false);
+  };
+
+  const handleClaimVoucher = async (voucherId: number) => {
+    try {
+      await updateVoucherStatus(voucherId, "claimed");
+      setVouchers((prevVouchers) =>
+        prevVouchers.filter((voucher) => voucher.id !== voucherId)
+      );
+      console.log(`Voucher ${voucherId} claimed successfully.`);
+    } catch (error) {
+      console.error("Error claiming voucher:", error);
+    }
   };
 
   return (
@@ -54,7 +66,6 @@ const CardAvailableVouchers = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
           }}
         >
           <GiftOutlined />
@@ -67,11 +78,11 @@ const CardAvailableVouchers = () => {
       {isLoading ? (
         <div className="m-5">Loading...</div>
       ) : (
-        <div className="overflow-auto h-full mb-6">
+        <div className="overflow-auto h-full">
           {vouchers.map((voucher) => (
             <div
               key={voucher.id}
-              className="flex items-center justify-between gap-3 py-4 border-b"
+              className="flex items-center justify-between py-4 border-b"
             >
               <div className="flex flex-col gap-1">
                 <div className="font-bold text-gray-700">{voucher.name}</div>
@@ -83,7 +94,10 @@ const CardAvailableVouchers = () => {
                 </div>
               </div>
               <div className="text-xs flex items-center">
-                <button className="p-2 rounded-full bg-green-100 text-green-600">
+                <button
+                  className="p-2 rounded-full bg-green-100 text-green-600"
+                  onClick={() => handleClaimVoucher(voucher.id)} 
+                >
                   Claim
                 </button>
               </div>
