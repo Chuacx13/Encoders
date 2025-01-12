@@ -23,12 +23,12 @@ const ForgotPassword = () => {
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-
+        
         if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = new RecaptchaVerifier(
               auth,
               "recaptcha-container",
-              { size: "invisible" }
+              { size: "normal" }
             );
           }
         const appVerifier = window.recaptchaVerifier;
@@ -39,8 +39,11 @@ const ForgotPassword = () => {
             setShowOtpInput(true);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            setError("Failed to send OTP. Please try again.");
-            console.error(err);
+            if (err.code == 'auth/invalid-phone-number') { 
+                setError("Invalid Phone Number.")
+            } else {
+                setError(err.message);
+            }
         }
     };
 
@@ -61,8 +64,11 @@ const ForgotPassword = () => {
             router.push("/password-reset");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            setError("Invalid OTP. Please try again.")
-            console.error(err);
+            if (err.code == 'auth/invalid-verification-code') { 
+                setError("Invalid OTP.")
+            } else {
+                setError(err.message);
+            }
         }
     }
 
@@ -72,7 +78,7 @@ const ForgotPassword = () => {
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
             Forgot Password
             </h2>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             {!showOtpInput ? (
             <form onSubmit={handleForgotPassword} className="space-y-6">
                 <div>
@@ -87,10 +93,10 @@ const ForgotPassword = () => {
                     onChange={(e) => setPhone(e.target.value)}
                     required
                     className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                    placeholder="Enter your Phone Number. Include Country Code."
+                    placeholder="Eg. +65 XXXXXXXX"
                     />
                 </div>
-                <div id="recaptcha-container"></div>
+                <div id="recaptcha-container" className="flex justify-center"></div>
                 <button
                     type="submit"
                     className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-600"
