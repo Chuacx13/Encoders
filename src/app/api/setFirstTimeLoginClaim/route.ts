@@ -18,8 +18,17 @@ export async function POST(req: Request) {
             );
         }
 
+        const user = await admin.auth().getUser(uid);
+        const currentClaims = user.customClaims || {};
+
+        // Merge new claims with existing claims
+        const updatedClaims = {
+            ...currentClaims, 
+            firstTimeLogin, 
+        };
+
         // Set custom claims
-        await admin.auth().setCustomUserClaims(uid, { firstTimeLogin });
+        await admin.auth().setCustomUserClaims(uid, updatedClaims);
 
         return NextResponse.json({
             message: 'First Time Login Claim set successfully',
