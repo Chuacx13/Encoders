@@ -21,6 +21,13 @@ export default function LoginPage() {
       // Firebase login
       await signInWithEmailAndPassword(auth, email, password);
       const token = await auth.currentUser?.getIdTokenResult();
+
+      // Users who login for the first time have to reset their password
+      if (token?.claims.firstTimeLogin) {
+        router.push('/reset-password');
+        return;
+      }
+
       if (token?.claims.admin) {
         router.push('/admin');
       } else {
@@ -80,8 +87,8 @@ export default function LoginPage() {
           >
             Login
           </button>
-          <p className='flex items-center justify-center'> Forgot your password?  
-            <Link href='/forgot-password' className="underline"> Reset it here! </Link> 
+          <p className='text-center text-sm text-gray-600 dark:text-gray-400 mt-4'> Forgot your password? {" "}
+            <Link href='/forgot-password' className="text-blue-600 hover:underline dark:text-blue-400"> Reset it here! </Link> 
           </p>
         </form>
       </div>
