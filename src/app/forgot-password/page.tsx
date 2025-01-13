@@ -61,7 +61,7 @@ const ForgotPassword = () => {
                 verificationId, otp
             )
             await signInWithCredential(auth, credential);
-            router.push("/password-reset");
+            router.push("/reset-password");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             if (err.code == 'auth/invalid-verification-code') { 
