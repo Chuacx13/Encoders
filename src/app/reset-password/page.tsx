@@ -4,7 +4,6 @@ import { useState } from "react";
 import { updatePassword } from "firebase/auth";
 import { auth } from '../../firebase/firebase';
 import { useRouter } from "next/navigation";
-import { setFirstTimeLoginClaim } from "../api/setFirstTimeLoginClaim/route";
 
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState("");
