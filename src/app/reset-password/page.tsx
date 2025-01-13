@@ -4,6 +4,7 @@ import { useState } from "react";
 import { updatePassword } from "firebase/auth";
 import { auth } from '../../firebase/firebase';
 import { useRouter } from "next/navigation";
+import { setFirstTimeLoginClaim } from "../api/setFirstTimeLoginClaim/route";
 
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState("");
@@ -28,9 +29,25 @@ const ResetPassword = () => {
                 return;
             }
 
-            const token = await user.getIdTokenResult();
-
+            const response = await fetch('/api/setFirstTimeLoginClaim', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    uid: user.uid,
+                    firstTimeLogin: true
+                }),
+            });
+    
+            if (!response.ok) {
+                console.error('Failed to set first time login claim');
+                throw new Error('Failed to set first time login claim');
+            }
+            
             await updatePassword(user, newPassword);
+
+            const token = await user.getIdTokenResult();
 
             if (token?.claims.admin) {
                 router.push('/admin');
