@@ -29,26 +29,29 @@ const ResetPassword = () => {
                 return;
             }
 
-            const response = await fetch('/api/setFirstTimeLoginClaim', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    uid: user.uid,
-                    firstTimeLogin: true
-                }),
-            });
-    
-            if (!response.ok) {
-                console.error('Failed to set first time login claim');
-                throw new Error('Failed to set first time login claim');
-            }
             
             await updatePassword(user, newPassword);
 
             const token = await user.getIdTokenResult();
 
+            if (token?.claims.firstTimeLogin) {
+                const response = await fetch('/api/setFirstTimeLoginClaim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        uid: user.uid,
+                        firstTimeLogin: false
+                    }),
+                });
+        
+                if (!response.ok) {
+                    console.error('Failed to set first time login claim');
+                    throw new Error('Failed to set first time login claim');
+                }
+            }
+            
             if (token?.claims.admin) {
                 router.push('/admin');
             } else {
