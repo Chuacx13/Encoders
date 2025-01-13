@@ -4,6 +4,8 @@ import { useState } from "react";
 import { updatePassword } from "firebase/auth";
 import { auth } from '../../firebase/firebase';
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import avatar from "../../../public/avatar.png";
 
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState("");
@@ -67,10 +69,11 @@ const ResetPassword = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            <Image src={avatar} alt="Avatar" width={200} height={200} className="mx-auto rounded-full"/>
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
             Reset Password
             </h2>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             <form onSubmit={handleResetPassword} className="space-y-6">
             <div>
                 <label
