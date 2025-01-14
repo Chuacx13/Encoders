@@ -5,7 +5,6 @@ import Billboard from "@/app/(components)/Billboard";
 import Container from "@/app/(components)/ui/Container";
 import NoResults from "@/app/(components)/ui/NoResults";
 import ProductCard from "@/app/(components)/ui/ProductCard";
-import { useState } from "react";
 import { mockFoodProductList } from "../../MockData";
 
 type Params = { categoryId: string };
@@ -13,15 +12,17 @@ type Params = { categoryId: string };
 const CategoryPage = ({ params }: { params: Promise<Params> }) => {
   const { categoryId } = use(params); // Unwrap the params Promise
 
-  const [products, setProducts] = useState(
-    mockFoodProductList.items.filter((item) => item.category.id === categoryId)
+  const products = mockFoodProductList.items.filter(
+    (item) => item.category.id === categoryId
   );
-  const [category, setCategory] = useState(products[0]?.category);
+  const category = products[0].category;
 
   return (
     <div className="mt-4">
       <Container>
-        <div className="h-full w-full rounded-3xl overflow-clip">{category && <Billboard data={category?.billboard} />}</div>
+        <div className="h-full w-full rounded-3xl overflow-clip">
+          {category && <Billboard data={category?.billboard} />}
+        </div>
         <div className="py-8">
           <div className="lg:grid lg:grid-cols-5 lg:gap-x-8">
             {/* Product List */}
