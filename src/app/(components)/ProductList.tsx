@@ -2,7 +2,7 @@ import NoResults from "@/app/(components)/ui/NoResults";
 import ProductCard from "@/app/(components)/ui/ProductCard";
 import { BillboardType } from "./Billboard";
 
-export interface Product {
+export interface Item {
   id: string;
   category: Category;
   name: string;
@@ -29,12 +29,12 @@ export interface Size {
     value: string;
 }
 
-interface ProductListProps {
+interface ItemListProps {
   title: string;
-  items: Product[];
+  items: Item[];
 }
 
-const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
+const ProductList: React.FC<ItemListProps> = ({ title, items }) => {
   return (
     <div className="space-y-4">
       <h3 className="text-3xl font-bold text-black justify-center flex">{title}</h3>

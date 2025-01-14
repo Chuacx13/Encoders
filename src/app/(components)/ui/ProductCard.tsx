@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "../ProductList";
+import { Item } from "../ProductList";
 import Image from "next/image";
 import IconButton from "@/app/(components)/ui/IconButton";
 import { Expand, ShoppingCart } from "lucide-react";
@@ -11,7 +11,7 @@ import { MouseEventHandler } from "react";
 import useCart from "@/hooks/use-cart";
 
 interface ProductCard {
-  data: Product;
+  data: Item;
 }
 
 const ProductCard: React.FC<ProductCard> = ({ data }) => {

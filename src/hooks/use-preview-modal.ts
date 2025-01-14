@@ -1,17 +1,17 @@
 import { create } from "zustand";
-import { Product } from "../app/(components)/ProductList";
+import { Item } from "../app/(components)/ProductList";
 
 interface PreviewModalStore {
     isOpen:boolean;
-    data?: Product;
-    onOpen: (data: Product) => void;
+    data?: Item;
+    onOpen: (data: Item) => void;
     onClose: () => void;
 }
 
 const usePreviewModal = create<PreviewModalStore>((set) => ({
     isOpen: false,
     data: undefined,
-    onOpen: (data: Product) => set({ data, isOpen: true }),
+    onOpen: (data: Item) => set({ data, isOpen: true }),
     onClose: () => set({ isOpen: false }),
 }));
 

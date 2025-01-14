@@ -2,12 +2,12 @@ import Currency from "@/app/(components)/ui/Currency";
 import Button from "@/app/(components)/ui/Button";
 import { ShoppingCart } from "lucide-react";
 
-import { Product } from "./ProductList";
+import { Item } from "./ProductList";
 import useCart from "@/hooks/use-cart";
 import { MouseEventHandler } from "react";
 
 interface InfoProps {
-  data: Product;
+  data: Item;
 }
 const Info: React.FC<InfoProps> = ({ data }) => {
   const cart = useCart();
