@@ -3,7 +3,7 @@ import { Item } from "@/app/(components)/ProductList";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-hot-toast";
 
-interface CartItem extends Item {
+export interface CartItem extends Item {
   quantity: number; // Add quantity field
 }
 
