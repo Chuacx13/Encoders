@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
   return (
     <div
       onClick={handleClick}
-      className="p-3 space-y-4 bg-white border cursor-pointer group rounded-xl"
+      className="p-3 space-y-4 bg-black cursor-pointer group rounded-xl bg-opacity-0 hover:bg-opacity-5 transition ease-in-out duration-200"
     >
       {/* Images and Actions */}
       <div className="relative bg-gray-100 aspect-square rounded-xl">
