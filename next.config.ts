@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
       "encrypted-tbn2.gstatic.com",
       "images.stockcake.com",
       "domf5oio6qrcr.cloudfront.net",
+      "img.pikbest.com",
+      "www.mashed.com",
     ], // Add all external image hostnames here
   },
 };

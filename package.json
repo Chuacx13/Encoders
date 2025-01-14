@@ -19,6 +19,7 @@
     "mwhmart": "file:",
     "next": "15.1.4",
     "numeral": "^2.0.6",
+    "query-string": "^9.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",

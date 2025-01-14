@@ -14,16 +14,21 @@ const Categories = () => {
       ) : (
         <div className="flex flex-wrap items-center justify-center gap-8">
           {categories.map((category: Category) => (
-            <Link href={`/categorys/${category.id}`} key={category.id}>
-              <Image
-                key={category.id}
-                src={category.billboard.imageUrl}
-                alt={category.name}
-                width={300}
-                height={100}
-                className="rounded-lg cursor-pointer"
-              />
-            </Link>
+            <div
+              className="object-contain w-[300px] h-[200px] rounded-lg"
+              key={category.id}
+            >
+              <Link href={`/shop/category/${category.id}`} key={category.id}>
+                <Image
+                  key={category.id}
+                  src={category.billboard.imageUrl}
+                  alt={category.name}
+                  width={300}
+                  height={400}
+                  className="rounded-lg cursor-pointer h-full w-full"
+                />
+              </Link>
+            </div>
           ))}
         </div>
       )}

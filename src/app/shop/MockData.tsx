@@ -42,7 +42,7 @@ export const mockFoodProductList = {
           id: "bill2",
           label: "Green Goodness",
           imageUrl:
-            "https://www.bgi-usa.com/wp-content/uploads/Blog-citrus-juicy-fruits-featured-image-1.png",
+            "https://img.pikbest.com/ai/illus_our/20230414/1087bc57005ad26a02654dca21bde9a7.jpg!w700wp",
         },
       },
       name: "Organic Broccoli",
@@ -69,7 +69,7 @@ export const mockFoodProductList = {
           id: "bill3",
           label: "Creamy & Fresh",
           imageUrl:
-            "https://www.bgi-usa.com/wp-content/uploads/Blog-citrus-juicy-fruits-featured-image-1.png",
+            "https://www.mashed.com/img/gallery/when-you-consume-a-lot-of-dairy-every-day-this-is-what-happens-to-your-body/intro-1608096791.jpg",
         },
       },
       name: "Fresh Milk",
