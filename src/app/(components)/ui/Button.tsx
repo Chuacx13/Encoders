@@ -4,9 +4,10 @@ import { forwardRef } from "react";
 const Button = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, children, disabled, ...props }, ref) => {
+>(({ className, children, disabled, onClick, ...props }, ref) => {
   return (
     <button
+      onClick={onClick}
       disabled={disabled}
       ref={ref}
       {...props}
