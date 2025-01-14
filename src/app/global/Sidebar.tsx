@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaHome, FaCog, FaUser, FaUsers, FaBars } from "react-icons/fa";
+import { FaHome, FaUser, FaUsers, FaBars } from "react-icons/fa";
 import { IoPersonAdd } from "react-icons/io5";
 
 
@@ -12,15 +12,13 @@ interface SidebarProps {
 
 const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: <FaHome /> },
-  { href: "/admin/residents", label: "Manage Residents", icon: <FaUsers /> },
-  { href: "/admin/settings", label: "Settings", icon: <FaCog /> },
+  { href: "/admin/manage-users", label: "Manage Users", icon: <FaUsers /> },
   { href: "/admin/create-accounts", label: "Create Accounts", icon: <IoPersonAdd />}
 ];
 
 const residentLinks = [
   { href: "/resident", label: "Dashboard", icon: <FaHome /> },
-  { href: "/resident/profile", label: "Profile", icon: <FaUser /> },
-  { href: "/resident/settings", label: "Settings", icon: <FaCog /> },
+  { href: "/resident/profile", label: "Profile", icon: <FaUser /> }
 ];
 
 export default function Sidebar({ userType }: SidebarProps) {
