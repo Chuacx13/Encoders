@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import CartItem from '../(components)/ui/CartItem';
+import CartItem from '../../(components)/ui/CartItem';
 import useCart from '@/hooks/use-cart';
 
 const Cart: React.FC = () => {
