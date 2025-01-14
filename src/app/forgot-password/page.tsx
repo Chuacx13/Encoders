@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PhoneAuthProvider, RecaptchaVerifier, signInWithCredential, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
+import Image from "next/image";
+import avatar from "../../../public/avatar.png";
 
 declare global {
     interface Window {
@@ -61,7 +63,7 @@ const ForgotPassword = () => {
                 verificationId, otp
             )
             await signInWithCredential(auth, credential);
-            router.push("/password-reset");
+            router.push("/reset-password");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             if (err.code == 'auth/invalid-verification-code') { 
@@ -75,6 +77,7 @@ const ForgotPassword = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            <Image src={avatar} alt="Avatar" width={200} height={200} className="mx-auto rounded-full"/>
             <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
             Forgot Password
             </h2>
@@ -107,19 +110,19 @@ const ForgotPassword = () => {
             ) : (
                 <form onSubmit={handleVerifyOtp} className="space-y-6">
                     <div>
-                    <label
-                        htmlFor="otp"
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        OTP
-                    </label>
-                    <input
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        required
-                        className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                        placeholder="Enter the OTP"
-                    />
+                        <label
+                            htmlFor="otp"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                            OTP
+                        </label>
+                        <input
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            required
+                            className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                            placeholder="Enter the OTP"
+                        />
                     </div>
                     <button
                     type="submit"

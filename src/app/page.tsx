@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import Link from "next/link";
+import Image from "next/image";
+import avatar from "../../public/avatar.png";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,6 +23,13 @@ export default function LoginPage() {
       // Firebase login
       await signInWithEmailAndPassword(auth, email, password);
       const token = await auth.currentUser?.getIdTokenResult();
+
+      // Users who login for the first time have to reset their password
+      if (token?.claims.firstTimeLogin) {
+        router.push('/reset-password');
+        return;
+      }
+
       if (token?.claims.admin) {
         router.push('/admin');
       } else {
@@ -41,6 +50,7 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+        <Image src={avatar} alt="Avatar" width={200} height={200} className="mx-auto rounded-full"/>
         <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
           Login to Your Account
         </h2>
@@ -80,8 +90,8 @@ export default function LoginPage() {
           >
             Login
           </button>
-          <p className='flex items-center justify-center'> Forgot your password?  
-            <Link href='/forgot-password' className="underline"> Reset it here! </Link> 
+          <p className='text-center text-sm text-gray-600 dark:text-gray-400 mt-4'> Forgot your password? {" "}
+            <Link href='/forgot-password' className="text-blue-600 hover:underline dark:text-blue-400"> Reset it here! </Link> 
           </p>
         </form>
       </div>
