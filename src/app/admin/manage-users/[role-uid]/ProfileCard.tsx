@@ -54,6 +54,26 @@ const ProfileCard: React.FC<User> = ({ id, name, email, phoneNumber, role }) => 
     }
   };
 
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch("/api/resetPasswordForUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uid: id, email, phoneNumber }), // Send necessary data
+      });
+
+      if (response.ok) {
+        alert("Password reset successfully. A new password has been set.");
+      } else {
+        console.error("Failed to reset password.");
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+    }
+  };
+
   return (
     <div className="w-full max-w-xl bg-white shadow-lg rounded-lg p-6 border border-gray-200">
       <div className="flex items-center gap-4 mb-4">
@@ -76,7 +96,9 @@ const ProfileCard: React.FC<User> = ({ id, name, email, phoneNumber, role }) => 
         >
           {isDisabled ? "Unsuspend Account" : "Suspend Account"} 
         </button>
-        <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition">
+        <button 
+          onClick={handleResetPassword} 
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition">
           Reset Password
         </button>
       </div>
