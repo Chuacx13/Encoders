@@ -24,6 +24,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             message: 'First Time Login Claim set successfully',
+            uid: user.uid
         });
     } catch (error) {
         console.error('Error creating account.', error);

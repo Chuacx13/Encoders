@@ -15,17 +15,9 @@ const fetchUsers = async () => {
     const adminsSnapshot = await getDocs(adminsCollection);
     const residentsSnapshot = await getDocs(residentsCollection);
 
-    const adminsData = adminsSnapshot.docs.filter((doc) => doc.id != user?.uid).map((doc) => ({
-      id: doc.id,
-      ...doc.data(), 
-      role: "Admin", 
-    })) as User[];
+    const adminsData = adminsSnapshot.docs.filter((doc) => doc.id != user?.uid).map((doc) => doc.data()) as User[];
 
-    const residentsData = residentsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(), 
-      role: "Resident", 
-    })) as Resident[];
+    const residentsData = residentsSnapshot.docs.map((doc) => doc.data()) as Resident[];
 
     return [...adminsData, ...residentsData]; 
   } catch (error) {

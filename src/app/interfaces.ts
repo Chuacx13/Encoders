@@ -32,6 +32,7 @@ export interface User {
 export interface Resident extends User {
   purchasedItems: Array<number>;
   voucher: Array<number>;
+  voucherPoints: number;
 }
 
 export interface BillboardType {
