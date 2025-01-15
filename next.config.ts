@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       "domf5oio6qrcr.cloudfront.net",
       "img.pikbest.com",
       "www.mashed.com",
+      "assets.aceternity.com",
     ], // Add all external image hostnames here
   },
 };
