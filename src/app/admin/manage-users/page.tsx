@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
-import { db } from "@/firebase/firebase";
+import { auth, db } from "@/firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { User, Resident } from "@/app/interfaces";
 import { useRouter } from "next/navigation";
@@ -9,20 +9,22 @@ const fetchUsers = async () => {
   const adminsCollection = collection(db, "admins");
   const residentsCollection = collection(db, "residents");
 
+  const user = auth.currentUser;
+  
   try {
     const adminsSnapshot = await getDocs(adminsCollection);
     const residentsSnapshot = await getDocs(residentsCollection);
 
-    const adminsData = adminsSnapshot.docs.map((doc) => ({
+    const adminsData = adminsSnapshot.docs.filter((doc) => doc.id != user?.uid).map((doc) => ({
       id: doc.id,
       ...doc.data(), 
-      role: "admin", 
+      role: "Admin", 
     })) as User[];
 
     const residentsData = residentsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(), 
-      role: "resident", 
+      role: "Resident", 
     })) as Resident[];
 
     return [...adminsData, ...residentsData]; 
@@ -51,7 +53,7 @@ export default function ManageUsers() {
       {users.map((user) => (
         <div
           key={user.id}
-          onClick={() => router.push(`/admin/manage-resident/${user.id}`)}
+          onClick={() => router.push(`/admin/manage-users/${user.role}-${user.id}`)}
           className="w-full bg-white shadow-md rounded-lg p-6 border border-gray-200 cursor-pointer transition-all duration-300 hover:bg-gray-800 hover:text-white"
         >
           <h2 className="text-lg font-bold hover:text-inherit">{user.name}</h2>
