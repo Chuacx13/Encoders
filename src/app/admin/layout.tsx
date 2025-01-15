@@ -11,12 +11,29 @@ import {
   IconWorld,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+import { useRouter } from "next/navigation";
+
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
+
+  const router = useRouter();
+  const handleLogout = async() => {
+    
+    try {
+      await signOut(auth);
+      router.push('/');
+
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
   const links = [
     {
       label: "Dashboard",
