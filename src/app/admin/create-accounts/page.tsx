@@ -1,10 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { addAdmin, addResident } from '@/app/api';
+import { User, Resident } from '@/app/interfaces';
 
 const CreateAccountForm = () => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [name, setName] = useState('');
     const [role, setRole] = useState('resident'); 
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
@@ -34,6 +37,17 @@ const CreateAccountForm = () => {
                 console.error('Failed to create new accounts.')
                 throw new Error('Failed to create new accounts.');
             }
+
+            const data = await response.json();
+            if (role === 'admin') {
+                // Create admin user
+                const adminUser: User = { id: data.uid, email, name, phoneNumber, role };
+                await addAdmin(adminUser);
+              } else if (role === 'resident') {
+                // Create resident user
+                const residentUser: Resident = { id: data.uid, email, name, phoneNumber, role, purchasedItems: [], voucher: [], voucherPoints: 0 };
+                await addResident(residentUser);
+              }
 
             setMessage('Account created successfully.')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,6 +85,18 @@ const CreateAccountForm = () => {
                             required
                             className="w-full mt-1 p-3 border rounded-lg focus:outline-none"
                             placeholder='Eg.+65XXXXXXXX'
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium">Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="w-full mt-1 p-3 border rounded-lg focus:outline-none"
+                            placeholder='Enter a name'
                         />
                     </div>
                     <div>
