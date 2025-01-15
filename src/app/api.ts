@@ -1,6 +1,6 @@
 import { db } from "@/firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { Item, Voucher } from "@/app/interfaces";
+import { OrderItem, Voucher } from "@/app/interfaces";
 
 //resident API calls
 export const fetchUserVouchers = async (uid: string): Promise<Voucher[]> => {
@@ -36,7 +36,10 @@ export const fetchUserVouchers = async (uid: string): Promise<Voucher[]> => {
   }
 };
 
-export const updateVoucherStatus = async (voucherId: number, newStatus: string) => {
+export const updateVoucherStatus = async (
+  voucherId: number,
+  newStatus: string
+) => {
   try {
     const voucherDocRef = doc(db, "vouchers", `voucher--00${voucherId}`);
     await updateDoc(voucherDocRef, { status: newStatus });
@@ -46,7 +49,7 @@ export const updateVoucherStatus = async (voucherId: number, newStatus: string) 
   }
 };
 
-export const fetchUserItems = async (uid: string): Promise<Item[]> => {
+export const fetchUserItems = async (uid: string): Promise<OrderItem[]> => {
   try {
     // Get the user document from the "residents" collection
     const userDocRef = doc(db, "residents", uid);
@@ -55,7 +58,7 @@ export const fetchUserItems = async (uid: string): Promise<Item[]> => {
     if (userDocSnap.exists()) {
       const userData = userDocSnap.data();
       const purchasedItems: number[] = userData.purchasedItems || [];
-      const fetchedItems: Item[] = [];
+      const fetchedItems: OrderItem[] = [];
 
       // Fetch each item from the "items" collection based on purchasedItems array
       for (const itemId of purchasedItems) {
@@ -63,7 +66,7 @@ export const fetchUserItems = async (uid: string): Promise<Item[]> => {
         const itemDocSnap = await getDoc(itemDocRef);
 
         if (itemDocSnap.exists()) {
-          const itemData = itemDocSnap.data() as Omit<Item, "id">;
+          const itemData = itemDocSnap.data() as Omit<OrderItem, "id">;
           fetchedItems.push({
             id: itemId,
             ...itemData,

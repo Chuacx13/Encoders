@@ -4,14 +4,14 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useCart, { CartItem as ItemCart } from "@/hooks/use-cart";
-import { Item } from "../ProductList";
+import { Item } from "@/app/interfaces";
 import { Trash } from "lucide-react";
 
 interface CartItemProps {
   item: ItemCart;
   addItem: (item: Item, quantity?: number) => void;
-  removeItem: (id: string) => void;
-  updateItemQuantity: (id: string, quantity: number) => void;
+  removeItem: (id: number) => void;
+  updateItemQuantity: (id: number, quantity: number) => void;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {

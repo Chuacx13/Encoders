@@ -1,6 +1,6 @@
 "use client";
 
-import { Item } from "../ProductList";
+import { Item } from "@/app/interfaces";
 import Image from "next/image";
 import IconButton from "@/app/(components)/ui/IconButton";
 import { Expand, ShoppingCart } from "lucide-react";

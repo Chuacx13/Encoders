@@ -9,13 +9,19 @@ export interface Voucher {
 
 export interface Item {
   id: number;
+  category: Category;
   name: string;
-  price: string | number;
-  datePurchased: string;
-  category: string;
+  price: string;
+  isFeatured: boolean;
+  images: Image[];
+  quantity: number;
 }
 
-export interface User { 
+export interface OrderItem extends Item {
+  datePurchased: string;
+}
+
+export interface User {
   id: string;
   email: string;
   name: string;
@@ -26,4 +32,19 @@ export interface User {
 export interface Resident extends User {
   purchasedItems: Array<number>;
   voucher: Array<number>;
+}
+export interface BillboardType {
+  id: string;
+  label: string;
+  imageUrl: string;
+
+}export interface Image {
+  id: string;
+  url: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  billboard: BillboardType;
 }

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Item } from "@/app/(components)/ProductList";
+import { Item } from "@/app/interfaces";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-hot-toast";
 
@@ -10,8 +10,8 @@ export interface CartItem extends Item {
 interface CartStore {
   items: CartItem[];
   addItem: (data: Item, quantity?: number) => void;
-  updateItemQuantity: (id: string, quantity: number) => void;
-  removeItem: (id: string) => void;
+  updateItemQuantity: (id: number, quantity: number) => void;
+  removeItem: (id: number) => void;
   removeAll: () => void;
 }
 
@@ -35,7 +35,7 @@ const useCart = create(
           toast.success(`${data.name} added to cart.`);
         }
       },
-      updateItemQuantity: (id: string, quantity: number) => {
+      updateItemQuantity: (id: number, quantity: number) => {
         const currentItems = get().items;
         const existingItemIndex = currentItems.findIndex((item) => item.id === id);
 
@@ -48,7 +48,7 @@ const useCart = create(
           toast.error("Item not found in cart.");
         }
       },
-      removeItem: (id: string) => {
+      removeItem: (id: number) => {
         const currentItems = get().items;
         const updatedItems = currentItems.filter((item) => item.id !== id);
         set({ items: updatedItems });

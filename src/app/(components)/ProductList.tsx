@@ -1,33 +1,6 @@
 import NoResults from "@/app/(components)/ui/NoResults";
 import ProductCard from "@/app/(components)/ui/ProductCard";
-import { BillboardType } from "./Billboard";
-
-export interface Item {
-  id: string;
-  category: Category;
-  name: string;
-  price: string;
-  isFeatured: boolean;
-  size: Size;
-  images: Image[];
-}
-
-export interface Image {
-    id: string;
-    url: string;
-}
-
-export interface Category {
-    id: string;
-    name: string;
-    billboard: BillboardType;
-}
-
-export interface Size {
-    id: string;
-    name: string;
-    value: string;
-}
+import { Item } from "../interfaces";
 
 interface ItemListProps {
   title: string;

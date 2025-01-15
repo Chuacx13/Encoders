@@ -1,8 +1,4 @@
-export interface BillboardType {
-  id: string;
-  label: string;
-  imageUrl: string;
-}
+import { BillboardType } from "../interfaces";
 
 interface BillboardProps {
   data: BillboardType;

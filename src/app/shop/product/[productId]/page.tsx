@@ -7,7 +7,7 @@ import ProductList from "@/app/(components)/ProductList";
 import Container from "@/app/(components)/ui/Container";
 import { mockFoodProductList } from "../../MockData";
 
-type Params = { productId: string };
+type Params = { productId: number };
 
 const ProductPage = ({ params }: { params: Promise<Params> }) => {
   const { productId } = use(params); // Unwrap the params Promise
@@ -15,7 +15,7 @@ const ProductPage = ({ params }: { params: Promise<Params> }) => {
   // Mock data logic
   const product =
     mockFoodProductList.items.find((item) => item.id === productId) || {
-      id: "",
+      id: 0,
       name: "Unknown Product",
       price: "0",
       isFeatured: false,
@@ -34,6 +34,7 @@ const ProductPage = ({ params }: { params: Promise<Params> }) => {
           label: "Unknown Label",
         },
       },
+      quantity: 0,
     };
 
   const suggestProducts = mockFoodProductList.items.filter(

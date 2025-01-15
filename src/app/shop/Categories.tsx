@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Category } from "../(components)/ProductList";
+import { Category } from "../interfaces";
 import { mockFoodProductList } from "./MockData";
 
 const Categories = () => {

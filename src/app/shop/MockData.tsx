@@ -1,5 +1,4 @@
-import { BillboardType } from "../(components)/Billboard";
-
+import { BillboardType } from "../interfaces";
 
 export const mockBillboard: BillboardType = {
   id: "1",
@@ -12,7 +11,7 @@ export const mockFoodProductList = {
   title: "Fresh & Delicious Food",
   items: [
     {
-      id: "1",
+      id: 1,
       category: {
         id: "cat1",
         name: "Fruits",
@@ -32,9 +31,10 @@ export const mockFoodProductList = {
           url: "https://cdn.nyallergy.com/wp-content/uploads/square-1432664914-strawberry-facts1.jpeg",
         },
       ],
+      quantity: 10,
     },
     {
-      id: "2",
+      id: 2,
       category: {
         id: "cat2",
         name: "Vegetables",
@@ -59,9 +59,10 @@ export const mockFoodProductList = {
           url: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSy31xCSe25IuWcPkualoBbw3tbJ0kPmbJtwQZA1Vdj3PvEXLEWrnfOZD2Kd00d-QSbEJ-lOhts0w-hejHOmzTpyA",
         },
       ],
+      quantity: 10,
     },
     {
-      id: "3",
+      id: 3,
       category: {
         id: "cat3",
         name: "Dairy",
@@ -86,6 +87,7 @@ export const mockFoodProductList = {
           url: "https://images.stockcake.com/public/e/1/f/e1f26bd7-b99b-40aa-a70b-391071b294ec_large/fresh-milk-outside-stockcake.jpg",
         },
       ],
+      quantity: 10,
     },
   ],
 };
