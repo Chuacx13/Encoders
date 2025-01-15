@@ -5,7 +5,6 @@
 // import { FaHome, FaUser, FaUsers, FaBars } from "react-icons/fa";
 // import { IoPersonAdd } from "react-icons/io5";
 
-
 // interface SidebarProps {
 //   userType: "admin" | "resident";
 // }
@@ -135,10 +134,10 @@ export const MobileSidebar = ({
 }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
   return (
-    <>
+    <div className="w-[50px] md:hidden">
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
         )}
         {...props}
       >
@@ -174,7 +173,7 @@ export const MobileSidebar = ({
           )}
         </AnimatePresence>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -211,7 +210,6 @@ export const SidebarLink = ({
     </Link>
   );
 };
-
 
 // export default function Sidebar({ userType }: SidebarProps) {
 //   const [isCollapsed, setIsCollapsed] = useState(false);
