@@ -40,6 +40,7 @@ export default function UserProfile() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <ProfileCard
+        id={uid}
         name={user.name}
         email={user.email}
         phoneNumber={user.phoneNumber}

@@ -34,12 +34,6 @@ export interface Resident extends User {
   voucher: Array<number>;
 }
 
-export interface ProfileCardProps {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
-}
 export interface BillboardType {
   id: string;
   label: string;
