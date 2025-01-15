@@ -18,18 +18,16 @@ interface ResidentLayoutProps {
 }
 
 export default function ResidentLayout({ children }: ResidentLayoutProps) {
-
   const router = useRouter();
-  const handleLogout = async() => {
-    
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push('/');
-
-    } catch(error) {
+      router.push("/");
+      console.log("Logged out");
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const links = [
     {
@@ -48,7 +46,8 @@ export default function ResidentLayout({ children }: ResidentLayoutProps) {
     },
     {
       label: "Logout",
-      href: "#",
+      href: "/",
+      onClick: handleLogout,
       icon: (
         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),

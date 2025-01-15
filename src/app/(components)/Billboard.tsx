@@ -6,9 +6,9 @@ interface BillboardProps {
 
 const Billboard: React.FC<BillboardProps> = ({ data }) => {
   return (
-    <div className=" overflow-hidden w-full">
+    <div className=" overflow-hidden w-full z-[-1]">
       <div
-        className="relative aspect-square md:aspect-[2.4/1] overflow-hidden bg-cover bg-center"
+        className="relative aspect-square md:aspect-[2.4/1] overflow-hidden bg-cover bg-center h-[24rem] w-full"
         style={{ backgroundImage: `url(${data?.imageUrl})` }}
       >
         <div className="flex flex-col items-center justify-center w-full h-full text-center gap-y-8">

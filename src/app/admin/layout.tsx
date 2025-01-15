@@ -8,31 +8,30 @@ import {
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
+  IconCategory,
   IconWorld,
+  IconGift,
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { useRouter } from "next/navigation";
 
-
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-
   const router = useRouter();
-  const handleLogout = async() => {
-    
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push('/');
-
-    } catch(error) {
+      console.log("Logged out");
+      router.push("/");
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const links = [
     {
@@ -64,8 +63,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       ),
     },
     {
+      label: "Manage Categories",
+      href: "/admin/categories",
+      icon: (
+        <IconCategory className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Manage Items",
+      href: "/admin/items",
+      icon: (
+        <IconGift className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
       label: "Logout",
-      href: "#",
+      href: "/",
+      onClick: handleLogout,
       icon: (
         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
