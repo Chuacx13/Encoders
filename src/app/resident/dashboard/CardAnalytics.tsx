@@ -31,7 +31,7 @@ const CardPurchaseAnalytics = () => {
     const fetchedItems = await fetchUserItems(uid);
     const transformedItems = fetchedItems.map((item) => ({
       ...item,
-      price: typeof item.price === "string" ? Number(item.price.replace("$", "")) : item.price,
+      price: item.price,
     }));
     setPurchases(transformedItems);
     setIsLoading(false);
