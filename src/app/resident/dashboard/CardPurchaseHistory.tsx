@@ -5,10 +5,10 @@ import { Text } from "@/app/(components)/Text";
 import { auth } from "@/firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { fetchUserItems } from "@/app/api";
-import { Item } from "@/app/interfaces";
+import { OrderItem } from "@/app/interfaces";
 
 const CardAvailableItems = () => {
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<OrderItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const CardAvailableItems = () => {
                   Date Purchased: {item.datePurchased}
                 </div>
                 <div className="text-sm text-gray-400">
-                  Category: {item.category}
+                  Category: {item.category.name}
                 </div>
               </div>
             </div>
