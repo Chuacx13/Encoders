@@ -343,3 +343,21 @@ export const getItemById = async (itemId: string): Promise<Item | null> => {
     throw new Error("Failed to fetch item");
   }
 };
+
+export const fetchUserVoucherPoints = async (uid: string): Promise<number> => {
+  try {
+    const userDocRef = doc(db, "residents", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      return userData.voucherPoints || 0;
+    } else {
+      console.error("No user document found.");
+      return 0;
+    }
+  } catch (error) {
+    console.error("Error fetching user voucher points:", error);
+    return 0;
+  }
+};

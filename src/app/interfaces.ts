@@ -15,6 +15,7 @@ export interface Item {
   isFeatured: boolean;
   images: Image[];
   quantity: number;
+  voucherPoints: number;
 }
 
 export interface OrderItem extends Item {
@@ -49,4 +50,23 @@ export interface Category {
   id: string;
   name: string;
   billboard: BillboardType;
+}
+
+export interface SpecialItem {
+  id: string;
+  name: string;
+  description: string;
+  currentBid: number;
+  auctionEndDate: string; 
+  highestBidder?: string;
+  status: "available" | "sold";
+}
+
+export interface Auction {
+  id: string;
+  auctionName: string;
+  description: string;
+  currentBid: number;
+  auctionDate: string;
+  highestBidder: string;
 }
