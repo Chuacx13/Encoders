@@ -15,7 +15,6 @@ export interface Item {
   isFeatured: boolean;
   images: Image[];
   quantity: number;
-  voucherPoints: number;
 }
 
 export interface OrderItem extends Item {
