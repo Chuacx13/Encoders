@@ -12,10 +12,10 @@ export interface Item {
   category: Category;
   name: string;
   price: string;
-  isFeatured: boolean;
   images: Image[];
   quantity: number;
   voucherPoints: number;
+  requestCount: number;
 }
 
 export interface OrderItem extends Item {
@@ -45,8 +45,11 @@ export interface BillboardType {
   id: string;
   label: string;
   imageUrl: string;
+  description?: string;
+  callToAction?: string;
+}
 
-}export interface Image {
+export interface Image {
   id: string;
   url: string;
 }
@@ -75,3 +78,4 @@ export interface Auction {
   auctionDate: string;
   highestBidder: string;
 }
+
