@@ -11,7 +11,7 @@ export const mockFoodProductList = {
   title: "Fresh & Delicious Food",
   items: [
     {
-      id: 1,
+      id: "1",
       category: {
         id: "cat1",
         name: "Fruits",
@@ -19,7 +19,6 @@ export const mockFoodProductList = {
       },
       name: "Fresh Strawberries",
       price: "499",
-      isFeatured: true,
       size: {
         id: "size1",
         name: "Box",
@@ -32,9 +31,10 @@ export const mockFoodProductList = {
         },
       ],
       quantity: 10,
+      requestCount: 0 
     },
     {
-      id: 2,
+      id: "2",
       category: {
         id: "cat2",
         name: "Vegetables",
@@ -47,7 +47,6 @@ export const mockFoodProductList = {
       },
       name: "Organic Broccoli",
       price: "249",
-      isFeatured: true,
       size: {
         id: "size2",
         name: "Bunch",
@@ -60,9 +59,10 @@ export const mockFoodProductList = {
         },
       ],
       quantity: 10,
+      requestCount: 0 
     },
     {
-      id: 3,
+      id: "3",
       category: {
         id: "cat3",
         name: "Dairy",
@@ -75,7 +75,6 @@ export const mockFoodProductList = {
       },
       name: "Fresh Milk",
       price: "379",
-      isFeatured: false,
       size: {
         id: "size3",
         name: "1 Litre",
@@ -88,6 +87,7 @@ export const mockFoodProductList = {
         },
       ],
       quantity: 10,
+      requestCount: 0 
     },
   ],
 };
