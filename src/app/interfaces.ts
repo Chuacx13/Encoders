@@ -15,7 +15,6 @@ export interface Item {
   isFeatured: boolean;
   images: Image[];
   quantity: number;
-  voucherPoints: number;
 }
 
 export interface OrderItem extends Item {
@@ -62,7 +61,6 @@ export interface SpecialItem {
   name: string;
   description: string;
   currentBid: number;
-  auctionEndDate: string; 
   highestBidder?: string;
   status: "available" | "sold";
 }

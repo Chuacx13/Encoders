@@ -73,9 +73,6 @@ const AuctionSystem: React.FC = () => {
           <p className="text-lg font-semibold text-gray-700">
             Current Bid: <span className="text-blue-600">{item.currentBid} points</span>
           </p>
-          <p className="text-sm text-gray-500">
-            Auction Ends: {format(new Date(item.auctionEndDate), "PPpp")}
-          </p>
 
           <div className="mt-4">
             <Input
