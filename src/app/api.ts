@@ -1,5 +1,5 @@
 import { db } from "@/firebase/firebase";
-import { collection, doc, getDocs, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Voucher, Item, OrderItem, Admin, Resident, BillboardType, Image, Category } from "@/app/interfaces";
 
 // Generate random id
@@ -248,6 +248,19 @@ export const getAllBillboards = async (): Promise<BillboardType[]> => {
   }
 };
 
+// Delete all Billboards
+export const deleteBillboardById = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, "billboards", id);
+    await deleteDoc(docRef); 
+    console.log(`Billboard with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting billboard with ID ${id}:`, error);
+    throw new Error("Failed to delete the billboard");
+  }
+};
+
+
 // Write Image
 export const addImage = async (image: Image): Promise<void> => {
   try {
@@ -308,6 +321,18 @@ export const getAllImages = async (): Promise<Image[]> => {
   } catch (error) {
     console.error("Error fetching images:", error);
     throw new Error("Failed to fetch images");
+  }
+};
+
+// Delete an image document by its ID
+export const deleteImageById = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, "images", id); 
+    await deleteDoc(docRef); 
+    console.log(`Image with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting image with ID ${id}:`, error);
+    throw new Error("Failed to delete the image");
   }
 };
 
@@ -374,6 +399,17 @@ export const getAllCategories = async (): Promise<Category[]> => {
   }
 };
 
+// Delete a category document by its ID
+export const deleteCategoryById = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, "categories", id); 
+    await deleteDoc(docRef); 
+    console.log(`Category with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting category with ID ${id}:`, error);
+    throw new Error("Failed to delete the category");
+  }
+};
 
 // Add Item
 export const addItem = async (item: Item): Promise<void> => {
@@ -392,8 +428,8 @@ export const addItem = async (item: Item): Promise<void> => {
 // Update Item
 export const updateItem = async (itemId: string, updatedData: Partial<Item>): Promise<void> => {
   try {
-    const docRef = doc(db, "items", itemId); // Reference the document by its ID
-    await updateDoc(docRef, updatedData); // Update only the specified fields
+    const docRef = doc(db, "items", itemId); 
+    await updateDoc(docRef, updatedData); 
     console.log("Item updated successfully:", itemId);
   } catch (error) {
     console.error("Error updating item:", error);
@@ -404,12 +440,12 @@ export const updateItem = async (itemId: string, updatedData: Partial<Item>): Pr
 // Read Item by ID
 export const getItemById = async (itemId: string): Promise<Item | null> => {
   try {
-    const docRef = doc(db, "items", itemId); // Reference the document by its ID
-    const docSnap = await getDoc(docRef); // Retrieve the document snapshot
+    const docRef = doc(db, "items", itemId); 
+    const docSnap = await getDoc(docRef); 
 
     if (docSnap.exists()) {
       console.log("Item data:", docSnap.data());
-      return docSnap.data() as Item; // Return the document data as an Item object
+      return docSnap.data() as Item; 
     } else {
       console.warn("No such item!");
       return null;
@@ -417,6 +453,36 @@ export const getItemById = async (itemId: string): Promise<Item | null> => {
   } catch (error) {
     console.error("Error fetching item:", error);
     throw new Error("Failed to fetch item");
+  }
+};
+
+// Fetch all items
+export const getAllItems = async (): Promise<Item[]> => {
+  try {
+    const collectionRef = collection(db, "items");
+    const querySnapshot = await getDocs(collectionRef);
+
+    const items: Item[] = [];
+    querySnapshot.forEach((doc) => {
+      items.push(doc.data() as Item);
+    });
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    throw new Error("Failed to fetch items");
+  }
+};
+
+// Delete a item document by its ID
+export const deleteItemById = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, "items", id); 
+    await deleteDoc(docRef); 
+    console.log(`Item with ID ${id} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting item with ID ${id}:`, error);
+    throw new Error("Failed to delete the item");
   }
 };
 
