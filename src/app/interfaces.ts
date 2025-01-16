@@ -8,7 +8,7 @@ export interface Voucher {
 }
 
 export interface Item {
-  id: string;
+  id: number;
   category: Category;
   name: string;
   price: string;

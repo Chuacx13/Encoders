@@ -11,7 +11,7 @@ export const mockFoodProductList = {
   title: "Fresh & Delicious Food",
   items: [
     {
-      id: "1",
+      id: 1,
       category: {
         id: "cat1",
         name: "Fruits",
@@ -34,7 +34,7 @@ export const mockFoodProductList = {
       requestCount: 0 
     },
     {
-      id: "2",
+      id: 2,
       category: {
         id: "cat2",
         name: "Vegetables",
@@ -62,7 +62,7 @@ export const mockFoodProductList = {
       requestCount: 0 
     },
     {
-      id: "3",
+      id: 3,
       category: {
         id: "cat3",
         name: "Dairy",

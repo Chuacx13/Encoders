@@ -191,7 +191,7 @@ export const addBillboard = async (billboard: BillboardType): Promise<void> => {
     const billboardId = await generateRandomId("billboards");
     const docRef = doc(db, "billboards", billboardId);
     await setDoc(docRef, billboard);
-    console.log("Billboard added with custom ID:", billboard.id);
+    console.log("Billboard added with custom ID:", billboardId);
   } catch (error) {
     console.error("Error adding billboard:", error);
     throw new Error("Failed to add billboard");
@@ -253,7 +253,7 @@ export const addImage = async (image: Image): Promise<void> => {
     const imageId = await generateRandomId("images");
     const docRef = doc(db, "images", imageId); 
     await setDoc(docRef, image);
-    console.log("Image added with custom ID:", image.id);
+    console.log("Image added with custom ID:", imageId);
   } catch (error) {
     console.error("Error adding image:", error);
     throw new Error("Failed to add image");
@@ -315,7 +315,7 @@ export const addCategory = async (category: Category): Promise<void> => {
     const categoryId = await generateRandomId("categories");
     const docRef = doc(db, "categories", categoryId); // Use category.id as the document ID
     await setDoc(docRef, category);
-    console.log("Category added with custom ID:", category.id);
+    console.log("Category added with custom ID:", categoryId);
   } catch (error) {
     console.error("Error adding category:", error);
     throw new Error("Failed to add category");
@@ -377,8 +377,9 @@ export const addItem = async (item: Item): Promise<void> => {
   try {
     const itemId = await generateRandomId("items");
     const docRef = doc(db, "items", itemId); 
+    item.id = Number(itemId);
     await setDoc(docRef, item);
-    console.log("Item added with custom ID:", item.id);
+    console.log("Item added with custom ID:", itemId);
   } catch (error) {
     console.error("Error adding item:", error);
     throw new Error("Failed to add item");
