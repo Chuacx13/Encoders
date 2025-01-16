@@ -9,7 +9,7 @@ import { mockAuctions } from "@/app/resident/auction/MockAuctions";
 import { Card, Button, Input, Calendar, Badge, Empty } from "antd";
 import { format } from "date-fns"; // Removed isToday as it's unused
 import { Auction, SpecialItem } from "@/app/interfaces";
-import moment from "moment"
+import { Dayjs } from "dayjs";
 
 const AuctionSystem: React.FC = () => {
   const [userUid, setUserUid] = useState<string | null>(null);
@@ -97,8 +97,8 @@ const AuctionSystem: React.FC = () => {
       ));
   };
 
-  const renderCalendar = (value: moment.Moment) => {
-    const date = format(value.toDate(), "yyyy-MM-dd");
+  const renderCalendar = (value: Dayjs) => {
+    const date = value.format("YYYY-MM-DD"); // Use Dayjs's `format` method directly
     const auctionsOnDate = mockAuctions.filter(
       (auction: Auction) => format(new Date(auction.auctionDate), "yyyy-MM-dd") === date
     );
