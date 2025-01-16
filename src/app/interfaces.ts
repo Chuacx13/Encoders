@@ -14,7 +14,6 @@ export interface Item {
   price: string;
   images: Image[];
   quantity: number;
-  voucherPoints: number;
   requestCount: number;
 }
 
@@ -65,7 +64,6 @@ export interface SpecialItem {
   name: string;
   description: string;
   currentBid: number;
-  auctionEndDate: string; 
   highestBidder?: string;
   status: "available" | "sold";
 }
