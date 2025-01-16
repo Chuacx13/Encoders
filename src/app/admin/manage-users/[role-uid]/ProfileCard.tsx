@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { User } from "@/app/interfaces";
+import { Admin, Resident } from "@/app/interfaces";
 
-const ProfileCard: React.FC<User> = ({ id, name, email, phoneNumber, role }) => {
+const ProfileCard: React.FC<Admin | Resident> = ({ id, name, email, phoneNumber, role }) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   // Fetch the current account status (disabled or active)

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "@/firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { User, Resident } from "@/app/interfaces";
+import { Admin, Resident } from "@/app/interfaces";
 import { useRouter } from "next/navigation";
 
 const fetchUsers = async () => {
@@ -15,7 +15,7 @@ const fetchUsers = async () => {
     const adminsSnapshot = await getDocs(adminsCollection);
     const residentsSnapshot = await getDocs(residentsCollection);
 
-    const adminsData = adminsSnapshot.docs.filter((doc) => doc.id != user?.uid).map((doc) => doc.data()) as User[];
+    const adminsData = adminsSnapshot.docs.filter((doc) => doc.id != user?.uid).map((doc) => doc.data()) as Admin[];
 
     const residentsData = residentsSnapshot.docs.map((doc) => doc.data()) as Resident[];
 
@@ -27,7 +27,7 @@ const fetchUsers = async () => {
 };
 
 export default function ManageUsers() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Admin[] | Resident[]>([]);
 
   useEffect(() => {
     const loadUsers = async () => {

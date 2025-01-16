@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { addAdmin, addResident } from '@/app/api';
-import { User, Resident } from '@/app/interfaces';
+import { Admin, Resident } from '@/app/interfaces';
 
 const CreateAccountForm = () => {
     const [email, setEmail] = useState('');
@@ -41,7 +41,7 @@ const CreateAccountForm = () => {
             const data = await response.json();
             if (role === 'admin') {
                 // Create admin user
-                const adminUser: User = { id: data.uid, email, name, phoneNumber, role };
+                const adminUser: Admin = { id: data.uid, email, name, phoneNumber, role };
                 await addAdmin(adminUser);
               } else if (role === 'resident') {
                 // Create resident user
@@ -107,8 +107,8 @@ const CreateAccountForm = () => {
                             onChange={(e) => setRole(e.target.value)}
                             className="w-full mt-1 p-3 border rounded-lg focus:outline-none"
                         >
-                            <option value="resident">Resident</option>
-                            <option value="admin">Admin</option>
+                            <option value="Resident">Resident</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <button
