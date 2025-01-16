@@ -14,7 +14,7 @@ const ProductPage = ({ params }: { params: Promise<Params> }) => {
 
   // Mock data logic
   const product =
-    mockFoodProductList.items.find((item) => item.id === productId) || {
+    mockFoodProductList.items.find((item) => item.id === Number(productId)) || {
       id: 0,
       name: "Unknown Product",
       price: "0",
@@ -35,6 +35,7 @@ const ProductPage = ({ params }: { params: Promise<Params> }) => {
         },
       },
       quantity: 0,
+      requestCount: 0
     };
 
   const suggestProducts = mockFoodProductList.items.filter(
