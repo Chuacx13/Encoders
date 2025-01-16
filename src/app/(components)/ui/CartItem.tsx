@@ -47,7 +47,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         >
           {images ? (
             <Image
-              src={images[0]?.url}
+              src={images[0]}
               alt={name}
               layout="fill"
               className="object-contain rounded-xl"

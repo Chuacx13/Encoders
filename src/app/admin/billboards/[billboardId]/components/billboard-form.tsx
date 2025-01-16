@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
 import { BillboardType } from "@/app/interfaces";
+import { addBillboard, deleteBillboardById, updateBillboard } from "@/app/api";
 
 interface SettingsFromProps {
   initialData: BillboardType | null;
@@ -32,7 +32,7 @@ const formSchema = z.object({
   label: z.string().min(1),
   imageUrl: z.string().min(1),
   description: z.string().optional(),
-  callToAction: z.string().optional()
+  callToAction: z.string().optional(),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -57,7 +57,7 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
       label: "",
       imageUrl: "",
       description: "",
-      callToAction: "", 
+      callToAction: "",
     },
   });
 
@@ -65,17 +65,18 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(
-          `/api/billboards/${params.billboardId}`,
-          data
-        );
+        await updateBillboard(String(params.billboardId), data);
       } else {
-        await axios.post(`/api/billboards`, data);
+        await addBillboard({
+          id: "0", // This is a placeholder value
+          createdAt: new Date().toISOString(),
+          ...data,
+        });
       }
       router.refresh();
       router.push(`/admin/billboards`);
       toast.success(toastMessage);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error("Something went wrong.");
     } finally {
@@ -86,13 +87,11 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(
-        `/api/billboards/${params.billboardId}`
-      );
+      await deleteBillboardById(String(params.billboardId));
       router.refresh();
       router.push(`/admin/billboards`);
       toast.success("Billboard deleted.");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error(
         "Make sure you removed all categories using this billboard first."
@@ -167,7 +166,7 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-          <FormField
+            <FormField
               control={form.control}
               name="description"
               render={({ field }) => (

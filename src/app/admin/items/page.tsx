@@ -1,17 +1,21 @@
 import { format } from "date-fns";
 import { ProductClient } from "./components/client";
 import { ItemColumn } from "./components/columns";
+import { getAllItems } from "@/app/api";
+import { Item } from "@/app/interfaces";
 
 const ItemsPage = async () => {
-  const items: ItemColumn[] = [];
+  const items = (await getAllItems()).map((item: Item) => ({
+    ...item,
+    createdAt: item.createdAt || String(new Date()),
+  }));
 
   const formattedItems: ItemColumn[] = items.map((item) => ({
     id: item.id,
     name: item.name,
-    isFeatured: item.isFeatured,
     price: item.price,
-    category: item.category,
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    category: item.category.name,
+    createdAt: format(new Date(item.createdAt), "MMMM dd yyyy"),
   }));
 
   return (

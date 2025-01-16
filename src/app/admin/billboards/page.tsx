@@ -9,15 +9,17 @@ const BillboardsPage = async () => {
   const billboards: BillboardColumn[] = allBillboards.map((item) => ({
     id: item.id,
     label: item.label,
-    createdAt: format(new Date(), "MMMM do, yyyy"), 
-    description: item.description || "", 
-    callToAction: item.callToAction || "", 
+    createdAt: item.createdAt || String(new Date()),
+    description: item.description || "",
+    callToAction: item.callToAction || "",
   }));
 
   const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
     label: item.label,
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    createdAt: format(new Date(item.createdAt), "MMMM do, yyyy"),
+    description: item.description,
+    callToAction: item.callToAction,
   }));
 
   return (

@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       "img.pikbest.com",
       "www.mashed.com",
       "assets.aceternity.com",
+      "res.cloudinary.com",
     ], // Add all external image hostnames here
   },
 };

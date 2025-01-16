@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
@@ -30,24 +28,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Category, Image, Item } from "@/app/interfaces";
+import { Category, Item } from "@/app/interfaces";
+import { addItem, deleteItemById, updateItem } from "@/app/api";
 
 interface ItemFromProps {
-  initialData:
-    | (Item & {
-        images: Image[];
-      })
-    | null;
+  initialData: Item | null;
   categories: Category[];
 }
 
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
-  price: z.coerce.number().min(1),
+  price: z.coerce.string().min(1),
   categoryId: z.string().min(1),
-  isFeatured: z.boolean().default(false).optional(),
+  quantity: z.coerce.number().min(0),
+  requestCount: z.coerce.number().min(0),
 });
 
 type ItemFormValues = z.infer<typeof formSchema>;
@@ -72,14 +67,16 @@ export const ItemForm: React.FC<ItemFromProps> = ({
     defaultValues: initialData
       ? {
           ...initialData,
-          price: parseFloat(String(initialData?.price)),
+          images: initialData.images.map((image) => ({ url: image })),
+          categoryId: initialData.category.id,
         }
       : {
           name: "",
           images: [],
-          price: 0,
+          price: "0",
           categoryId: "",
-          isFeatured: false,
+          quantity: 0,
+          requestCount: 0,
         },
   });
 
@@ -87,9 +84,32 @@ export const ItemForm: React.FC<ItemFromProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/items/${params.itemId}`, data);
+        await updateItem(String(params.itemId), {
+          ...data,
+          images: data.images.map((image) => image.url),
+        });
       } else {
-        await axios.post(`/api/items`, data);
+        await addItem({
+          id: 0, // This is a placeholder value
+          name: data.name,
+          images: data.images.map((image) => image.url),
+          price: String(data.price),
+          category: categories.find(
+            (category) => category.id === data.categoryId
+          ) || {
+            id: "0",
+            name: "Unknown",
+            createdAt: new Date().toISOString(),
+            billboard: {
+              id: "0",
+              label: "Unknown",
+              imageUrl: "",
+              createdAt: new Date().toISOString(),
+            },
+          },
+          quantity: data.quantity,
+          requestCount: data.requestCount,
+        });
       }
       router.refresh();
       router.push(`/admin/items`);
@@ -105,7 +125,7 @@ export const ItemForm: React.FC<ItemFromProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/items/${params.itemId}`);
+      await deleteItemById(String(params.itemId));
       router.refresh();
       router.push(`/admin/items`);
       toast.success("Item deleted.");
@@ -237,24 +257,21 @@ export const ItemForm: React.FC<ItemFromProps> = ({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="isFeatured"
+              name="quantity"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start p-4 space-x-3 space-y-0 border rounded-md">
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="Enter quantity"
+                      {...field}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Featured</FormLabel>
-                    <FormDescription>
-                      The item will appear on the home page.
-                    </FormDescription>
-                  </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />

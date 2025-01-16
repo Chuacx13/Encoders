@@ -1,21 +1,18 @@
-"use client";
-
-import { use } from "react"; // Import use to unwrap params
 import Billboard from "@/app/(components)/Billboard";
 import Container from "@/app/(components)/ui/Container";
 import NoResults from "@/app/(components)/ui/NoResults";
 import ProductCard from "@/app/(components)/ui/ProductCard";
-import { mockFoodProductList } from "../../MockData";
+import { getAllItems, getCategoryById } from "@/app/api";
 
 type Params = { categoryId: string };
 
-const CategoryPage = ({ params }: { params: Promise<Params> }) => {
-  const { categoryId } = use(params); // Unwrap the params Promise
-
-  const products = mockFoodProductList.items.filter(
+const CategoryPage = async ({ params }: { params: Promise<Params> }) => {
+  const { categoryId } = await params; // Unwrap the params Promise
+  const allProducts = await getAllItems();
+  const products = allProducts.filter(
     (item) => item.category.id === categoryId
   );
-  const category = products[0].category;
+  const category = await getCategoryById(categoryId);
 
   return (
     <div className="mt-4">

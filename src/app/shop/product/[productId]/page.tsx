@@ -1,45 +1,18 @@
-"use client";
-
-import { use } from "react"; // Import use to unwrap params
 import Gallery from "@/app/(components)/Gallery";
 import Info from "@/app/(components)/Info";
 import ProductList from "@/app/(components)/ProductList";
 import Container from "@/app/(components)/ui/Container";
-import { mockFoodProductList } from "../../MockData";
+import { getAllItems, getItemById } from "@/app/api";
 
-type Params = { productId: number };
+type Params = { productId: string };
 
-const ProductPage = ({ params }: { params: Promise<Params> }) => {
-  const { productId } = use(params); // Unwrap the params Promise
-
-  // Mock data logic
-  const product =
-    mockFoodProductList.items.find((item) => item.id === Number(productId)) || {
-      id: 0,
-      name: "Unknown Product",
-      price: "0",
-      isFeatured: false,
-      size: {
-        id: "",
-        name: "Unknown Size",
-        value: "",
-      },
-      images: [],
-      category: {
-        id: "",
-        name: "Unknown Category",
-        billboard: {
-          id: "",
-          imageUrl: "",
-          label: "Unknown Label",
-        },
-      },
-      quantity: 0,
-      requestCount: 0
-    };
-
-  const suggestProducts = mockFoodProductList.items.filter(
-    (item) => item.category.id === product?.category.id && item.id !== productId
+const ProductPage = async ({ params }: { params: Promise<Params> }) => {
+  const { productId } = await params; // Unwrap the params Promise
+  const allItems = await getAllItems();
+  const product = await getItemById(productId);
+  const suggestProducts = allItems.filter(
+    (item) =>
+      item.category.id === product?.category.id && item.id !== Number(productId)
   );
 
   return (
@@ -51,7 +24,7 @@ const ProductPage = ({ params }: { params: Promise<Params> }) => {
             <Gallery images={product?.images || []} />
             <div className="px-4 mt-0 sm:mt-16 sm:px-0 lg:mt-0">
               {/* Info */}
-              <Info data={product} />
+              {product && <Info data={product} />}
             </div>
           </div>
           <hr className="my-10" />

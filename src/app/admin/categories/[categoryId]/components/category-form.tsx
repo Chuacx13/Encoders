@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import {
@@ -29,6 +28,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BillboardType, Category } from "@/app/interfaces";
+import {
+  addCategory,
+  deleteCategoryById,
+  getBillboardById,
+  updateCategory,
+} from "@/app/api";
 
 interface SettingsFromProps {
   initialData: Category | null;
@@ -59,9 +64,9 @@ export const CategoryForm: React.FC<SettingsFromProps> = ({
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
-      name: "",
-      billboardId: "",
+    defaultValues: {
+      name: initialData?.name || "",
+      billboardId: initialData?.billboard?.id || "",
     },
   });
 
@@ -69,9 +74,18 @@ export const CategoryForm: React.FC<SettingsFromProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/categories/${params.categoryId}`, data);
+        await updateCategory(String(params.categoryId), data);
       } else {
-        await axios.post(`/api/categories`, data);
+        await addCategory({
+          id: "0", // This is a placeholder value
+          name: data.name,
+          billboard: (await getBillboardById(data.billboardId)) || {
+            id: "0",
+            label: "Unknown",
+            imageUrl: "",
+            createdAt: new Date().toISOString(),
+          }, // This is a placeholder value,
+        });
       }
       router.refresh();
       router.push(`/admin/categories`);
@@ -87,7 +101,7 @@ export const CategoryForm: React.FC<SettingsFromProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/categories/${params.categoryId}`);
+      await deleteCategoryById(String(params.categoryId));
       router.refresh();
       router.push(`/admin/categories`);
       toast.success("Category deleted.");

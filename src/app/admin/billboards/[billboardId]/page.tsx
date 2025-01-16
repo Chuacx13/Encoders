@@ -6,10 +6,8 @@ const BillboardPage = async ({
 }: {
   params: Promise<{ billboardId: string }>;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { billboardId } = await params;
 
-  // TODO: Fetch billboard from the server using billboardId
   const billboard = await getBillboardById(billboardId);
 
   return (

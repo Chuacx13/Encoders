@@ -6,6 +6,8 @@ export type BillboardColumn = {
   id: string;
   label: string;
   createdAt: string;
+  description: string;
+  callToAction: string;
 };
 
 export const columns: ColumnDef<BillboardColumn>[] = [

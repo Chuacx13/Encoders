@@ -13,8 +13,8 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { deleteItemById } from "@/app/api";
 
 interface CellActionProps {
   data: ItemColumn;
@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/items/${data.id}`);
+      await deleteItemById(String(data.id));
       router.refresh();
       toast.success("Product deleted successfully.");
     } catch {
@@ -62,7 +62,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => onCopy(data.id)}>
+          <DropdownMenuItem onClick={() => onCopy(String(data.id))}>
             <Copy className="w-4 h-4 mr-2" />
             Copy Id
           </DropdownMenuItem>

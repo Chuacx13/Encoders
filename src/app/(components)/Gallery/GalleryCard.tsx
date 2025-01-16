@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { Tab } from "@headlessui/react";
 import { cn } from "@/lib/utils";
-import { Image as ImageType } from "@/app/interfaces";
 
 interface GalleryTabProps {
-  image: ImageType;
+  image: string;
 }
 
 const GalleryCard: React.FC<GalleryTabProps> = ({ image }) => {
@@ -16,7 +15,7 @@ const GalleryCard: React.FC<GalleryTabProps> = ({ image }) => {
             <Image
               fill
               alt=""
-              src={image.url}
+              src={image}
               className="object-cover object-center"
             />
           </span>

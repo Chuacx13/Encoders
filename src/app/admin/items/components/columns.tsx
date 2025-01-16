@@ -3,11 +3,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
 export type ItemColumn = {
-  id: string;
+  id: number;
   name: string;
   price: string;
   category: string;
-  isFeatured: boolean;
   createdAt: string;
 };
 
@@ -15,10 +14,6 @@ export const columns: ColumnDef<ItemColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
-  },
-  {
-    accessorKey: "isFeatured",
-    header: "Featured",
   },
   {
     accessorKey: "price",

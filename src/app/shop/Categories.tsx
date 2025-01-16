@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Category } from "../interfaces";
-import { mockFoodProductList } from "./MockData";
+import { getAllCategories } from "../api";
 
-const Categories = () => {
-  const categories = mockFoodProductList?.items?.map((item) => item.category);
+const Categories = async () => {
+  const categories = await getAllCategories();
 
   return (
     <div className="flex flex-col items-center gap-10 py-8 px-5">

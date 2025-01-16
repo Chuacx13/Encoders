@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { Tab } from "@headlessui/react";
-import { Image as ImageType } from "@/app/interfaces";
 import GalleryCard from "./GalleryCard";
 
 interface GalleryProps {
-  images: ImageType[];
+  images: string[];
 }
 
 const Gallery: React.FC<GalleryProps> = ({ images }) => {
@@ -14,18 +13,18 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
     <Tab.Group as="div" className="flex flex-col-reverse">
       <div className="hidden w-full max-w-2xl mx-auto mt-6 sm:block lg:max-w-none">
         <Tab.List className="grid grid-cols-4 gap-6">
-          {images.map((image) => (
-            <GalleryCard key={image.id} image={image} />
+          {images.map((image, id) => (
+            <GalleryCard key={id} image={image} />
           ))}
         </Tab.List>
       </div>
       <Tab.Panels className="w-full aspect-square">
-        {images.map((image) => (
-          <Tab.Panel key={image.id}>
+        {images.map((image, id) => (
+          <Tab.Panel key={id}>
             <div className="relative w-full h-full overflow-hidden aspect-square sm:rounded-lg">
               <Image
                 fill
-                src={image.url}
+                src={image}
                 alt={"Image"}
                 className="object-cover object-center"
               />

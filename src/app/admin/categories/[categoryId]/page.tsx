@@ -1,15 +1,15 @@
 import { BillboardType } from "@/app/interfaces";
 import { CategoryForm } from "./components/category-form";
+import { getAllBillboards, getCategoryById } from "@/app/api";
 
 const CategoryPage = async ({
   params,
 }: {
   params: Promise<{ categoryId: string }>;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { categoryId } = await params;
-  const category = null;
-  const billboards: BillboardType[] = [];
+  const category = await getCategoryById(categoryId);
+  const billboards: BillboardType[] = await getAllBillboards();
 
   return (
     <div className="flex-col">

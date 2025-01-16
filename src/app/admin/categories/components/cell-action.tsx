@@ -13,8 +13,8 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { deleteCategoryById } from "@/app/api";
 
 interface CellActionProps {
   data: CategoryColumn;
@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/categories/${data.id}`);
+      await deleteCategoryById(data.id);
       router.refresh();
       toast.success("Category deleted successfully.");
     } catch {

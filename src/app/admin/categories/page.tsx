@@ -1,16 +1,22 @@
 import { format } from "date-fns";
 import { CategoryClient } from "./components/client";
 import { CategoryColumn } from "./components/columns";
+import { getAllCategories } from "@/app/api";
 
 const CategoriesPage = async () => {
-  //TODO: Fetch categories from the server
-  const categories: CategoryColumn[] = [];
+  const allCategories = await getAllCategories();
+  const categories: CategoryColumn[] = allCategories.map((category) => ({
+    id: category.id,
+    name: category.name,
+    billboardLabel: category.billboard.label,
+    createdAt: category.createdAt || String(new Date()),
+  }));
 
   const formattedCategories: CategoryColumn[] = categories.map((item) => ({
     id: item.id,
     name: item.name,
     billboardLabel: item.billboardLabel,
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    createdAt: format(new Date(item.createdAt), "MMMM dd yyyy"),
   }));
 
   return (

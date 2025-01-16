@@ -2,13 +2,13 @@ import Container from "./ui/Container";
 import Link from "next/link";
 import NavRoutes from "./NavRoutes";
 import NavbarActions from "./NavActions";
-import { mockFoodProductList } from "../shop/MockData";
 import Image from "next/image";
+import { getAllCategories } from "../api";
 
 export const revalidate = 0;
 
-const Navbar = () => {
-  const categories = mockFoodProductList?.items?.map((item) => item.category);
+const Navbar = async () => {
+  const categories = await getAllCategories();
 
   return (
     <div className="border-b">

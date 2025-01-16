@@ -151,6 +151,3 @@ export const mockProducts: Product[] = [
     expenseSummary: mockExpenseSummary,
     expenseByCategorySummary: mockExpenseByCategorySummary,
   };
-  
-  console.log(mockDashboardMetrics);
-  
