@@ -7,6 +7,7 @@ import {
   IconArrowLeft,
   IconBrandTabler,
   IconUserBolt,
+  IconShoppingBag
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
@@ -42,6 +43,13 @@ export default function ResidentLayout({ children }: ResidentLayoutProps) {
       href: "/resident/profile",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Shop",
+      href: "/shop",
+      icon: (
+        <IconShoppingBag className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
