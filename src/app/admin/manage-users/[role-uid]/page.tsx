@@ -1,30 +1,31 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
 import ProfileCard from "./ProfileCard";
-import { User, Resident } from "@/app/interfaces";
+import { Admin, Resident } from "@/app/interfaces";
+import { getAdminById, getResidentById } from "@/app/api";
 
 export default function UserProfile() {
   const params = useParams();
   const [role, uid] = (params["role-uid"] as string|| "").split("-");
 
-  const [user, setUser] = useState<User | Resident>();
+  const [user, setUser] = useState<Admin | Resident>();
 
   useEffect(() => {
     if (uid && role) {
       const fetchUser = async () => {
         try {
+          let data: Admin | Resident | null = null;
           const collectionName = role === "Resident" ? "residents" : "admins";
-          const docRef = doc(db, collectionName, uid as string);
-          const docSnap = await getDoc(docRef);
 
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setUser(data as User | Resident);
-          } else {
-            console.error("No document found");
+          if (collectionName ==  "residents") {
+            data = await getResidentById(uid);
+          } else if (collectionName == "admins") {
+            data = await getAdminById(uid);
+          }
+
+          if (data) { 
+            setUser(data);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);

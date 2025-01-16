@@ -22,7 +22,7 @@ export interface OrderItem extends Item {
   datePurchased: string;
 }
 
-export interface User {
+export interface Admin {
   id: string;
   email: string;
   name: string;
@@ -30,7 +30,12 @@ export interface User {
   role: string;
 }
 
-export interface Resident extends User {
+export interface Resident {
+  id: string;
+  email: string;
+  name: string;
+  phoneNumber: string;
+  role: string;
   purchasedItems: Array<number>;
   voucher: Array<number>;
   voucherPoints: number;
