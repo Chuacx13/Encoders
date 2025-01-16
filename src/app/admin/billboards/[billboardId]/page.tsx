@@ -1,4 +1,5 @@
 import { BillboardForm } from "./components/billboard-form";
+import { getBillboardById } from "@/app/api";
 
 const BillboardPage = async ({
   params,
@@ -9,7 +10,7 @@ const BillboardPage = async ({
   const { billboardId } = await params;
 
   // TODO: Fetch billboard from the server using billboardId
-  const billboard = null;
+  const billboard = await getBillboardById(billboardId);
 
   return (
     <div className="flex-col">

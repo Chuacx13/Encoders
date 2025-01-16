@@ -31,6 +31,8 @@ interface SettingsFromProps {
 const formSchema = z.object({
   label: z.string().min(1),
   imageUrl: z.string().min(1),
+  description: z.string().optional(),
+  callToAction: z.string().optional()
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -54,6 +56,8 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
     defaultValues: initialData || {
       label: "",
       imageUrl: "",
+      description: "",
+      callToAction: "", 
     },
   });
 
@@ -156,6 +160,40 @@ export const BillboardForm: React.FC<SettingsFromProps> = ({ initialData }) => {
                     <Input
                       disabled={loading}
                       placeholder="Billboard label"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Billboard description (optional)"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="callToAction"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Call to Action</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Call to Action (optional)"
                       {...field}
                     />
                   </FormControl>

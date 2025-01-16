@@ -1,10 +1,18 @@
 import { format } from "date-fns";
 import { BillboardClient } from "./components/Client";
 import { BillboardColumn } from "./components/Columns";
+import { getAllBillboards } from "@/app/api";
 
 const BillboardsPage = async () => {
   // TODO: Fetch billboards from the server
-  const billboards: BillboardColumn[] = [];
+  const allBillboards = await getAllBillboards();
+  const billboards: BillboardColumn[] = allBillboards.map((item) => ({
+    id: item.id,
+    label: item.label,
+    createdAt: format(new Date(), "MMMM do, yyyy"), 
+    description: item.description || "", 
+    callToAction: item.callToAction || "", 
+  }));
 
   const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
