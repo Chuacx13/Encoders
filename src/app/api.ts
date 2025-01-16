@@ -1,7 +1,20 @@
 import { db } from "@/firebase/firebase";
-import { doc,getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { Voucher, Item, OrderItem, Admin, Resident, BillboardType, Image, Category } from "@/app/interfaces";
 
+// Generate random id
+const generateRandomId = async (docName: string): Promise<string> => {
+
+  let currId = Math.floor(1000000 + Math.random() * 9000000).toString(); 
+  let docRef = doc(db, docName, currId);
+  let docSnap = await getDoc(docRef);
+  while (docSnap.exists()) {
+    currId = Math.floor(1000000 + Math.random() * 9000000).toString();
+    docRef = doc(db, docName, currId);
+    docSnap = await getDoc(docRef);
+  }
+  return currId 
+};
 
 //resident API calls
 export const fetchUserVouchers = async (uid: string): Promise<Voucher[]> => {
@@ -175,7 +188,8 @@ export const getResidentById = async (userId: string): Promise<Resident | null> 
 // Write Billboard
 export const addBillboard = async (billboard: BillboardType): Promise<void> => {
   try {
-    const docRef = doc(db, "billboards", billboard.id);
+    const billboardId = await generateRandomId("billboards");
+    const docRef = doc(db, "billboards", billboardId);
     await setDoc(docRef, billboard);
     console.log("Billboard added with custom ID:", billboard.id);
   } catch (error) {
@@ -215,10 +229,29 @@ export const getBillboardById = async (billboardId: string): Promise<BillboardTy
   }
 };
 
+// Fetch all Billboards
+export const getAllBillboards = async (): Promise<BillboardType[]> => {
+  try {
+    const collectionRef = collection(db, "billboards");
+    const querySnapshot = await getDocs(collectionRef);
+
+    const billboards: BillboardType[] = [];
+    querySnapshot.forEach((doc) => {
+      billboards.push(doc.data() as BillboardType);
+    });
+
+    return billboards;
+  } catch (error) {
+    console.error("Error fetching billboards:", error);
+    throw new Error("Failed to fetch billboards");
+  }
+};
+
 // Write Image
 export const addImage = async (image: Image): Promise<void> => {
   try {
-    const docRef = doc(db, "images", image.id); // Use image.id as the document ID
+    const imageId = await generateRandomId("images");
+    const docRef = doc(db, "images", imageId); 
     await setDoc(docRef, image);
     console.log("Image added with custom ID:", image.id);
   } catch (error) {
@@ -230,8 +263,8 @@ export const addImage = async (image: Image): Promise<void> => {
 // Update Image
 export const updateImage = async (imageId: string, updatedData: Partial<Image>): Promise<void> => {
   try {
-    const docRef = doc(db, "images", imageId); // Reference the document by its ID
-    await updateDoc(docRef, updatedData); // Update only the specified fields
+    const docRef = doc(db, "images", imageId); 
+    await updateDoc(docRef, updatedData); 
     console.log("Image updated successfully:", imageId);
   } catch (error) {
     console.error("Error updating image:", error);
@@ -258,10 +291,29 @@ export const getImageById = async (imageId: string): Promise<Image | null> => {
   }
 };
 
+// Fetch all Images
+export const getAllImages = async (): Promise<Image[]> => {
+  try {
+    const collectionRef = collection(db, "images");
+    const querySnapshot = await getDocs(collectionRef);
+
+    const images: Image[] = [];
+    querySnapshot.forEach((doc) => {
+      images.push(doc.data() as Image);
+    });
+
+    return images;
+  } catch (error) {
+    console.error("Error fetching images:", error);
+    throw new Error("Failed to fetch images");
+  }
+};
+
 // Write Category
 export const addCategory = async (category: Category): Promise<void> => {
   try {
-    const docRef = doc(db, "categories", category.id); // Use category.id as the document ID
+    const categoryId = await generateRandomId("categories");
+    const docRef = doc(db, "categories", categoryId); // Use category.id as the document ID
     await setDoc(docRef, category);
     console.log("Category added with custom ID:", category.id);
   } catch (error) {
@@ -301,10 +353,30 @@ export const getCategoryById = async (categoryId: string): Promise<Category | nu
   }
 };
 
+// Fetch all Categories
+export const getAllCategories = async (): Promise<Category[]> => {
+  try {
+    const collectionRef = collection(db, "categories");
+    const querySnapshot = await getDocs(collectionRef);
+
+    const categories: Category[] = [];
+    querySnapshot.forEach((doc) => {
+      categories.push(doc.data() as Category);
+    });
+
+    return categories;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw new Error("Failed to fetch categories");
+  }
+};
+
+
 // Add Item
 export const addItem = async (item: Item): Promise<void> => {
   try {
-    const docRef = doc(db, "items", item.id.toString()); // Use item.id as the document ID
+    const itemId = await generateRandomId("items");
+    const docRef = doc(db, "items", itemId); 
     await setDoc(docRef, item);
     console.log("Item added with custom ID:", item.id);
   } catch (error) {
