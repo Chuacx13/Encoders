@@ -1,6 +1,6 @@
 import { db } from "@/firebase/firebase";
 import { doc,getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { Voucher, Item, OrderItem, User, Resident, BillboardType, Image, Category } from "@/app/interfaces";
+import { Voucher, Item, OrderItem, Admin, Resident, BillboardType, Image, Category } from "@/app/interfaces";
 
 
 //resident API calls
@@ -87,7 +87,7 @@ export const fetchUserItems = async (uid: string): Promise<OrderItem[]> => {
 };
 
 // Write Admin
-export const addAdmin = async (user: User): Promise<void> => {
+export const addAdmin = async (user: Admin): Promise<void> => {
   try {
     const docRef = doc(db, "admins", user.id); 
     await setDoc(docRef, user);
@@ -99,7 +99,7 @@ export const addAdmin = async (user: User): Promise<void> => {
 };
 
 // Update
-export const updateAdmin = async (userId: string, updatedData: Partial<User>): Promise<void> => {
+export const updateAdmin = async (userId: string, updatedData: Partial<Admin>): Promise<void> => {
   try {
     const docRef = doc(db, "admins", userId); 
     await updateDoc(docRef, updatedData); 
@@ -111,14 +111,14 @@ export const updateAdmin = async (userId: string, updatedData: Partial<User>): P
 };
 
 // Read Admin
-export const getAdminById = async (userId: string): Promise<User | null> => {
+export const getAdminById = async (userId: string): Promise<Admin | null> => {
   try {
     const docRef = doc(db, "admins", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       console.log("User data:", docSnap.data());
-      return docSnap.data() as User; 
+      return docSnap.data() as Admin; 
     } else {
       console.warn("No such user!");
       return null;
