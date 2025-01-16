@@ -190,6 +190,7 @@ export const addBillboard = async (billboard: BillboardType): Promise<void> => {
   try {
     const billboardId = await generateRandomId("billboards");
     const docRef = doc(db, "billboards", billboardId);
+    billboard.id = billboardId
     await setDoc(docRef, billboard);
     console.log("Billboard added with custom ID:", billboardId);
   } catch (error) {
@@ -251,7 +252,8 @@ export const getAllBillboards = async (): Promise<BillboardType[]> => {
 export const addImage = async (image: Image): Promise<void> => {
   try {
     const imageId = await generateRandomId("images");
-    const docRef = doc(db, "images", imageId); 
+    const docRef = doc(db, "images", imageId);
+    image.id = imageId 
     await setDoc(docRef, image);
     console.log("Image added with custom ID:", imageId);
   } catch (error) {
@@ -314,6 +316,7 @@ export const addCategory = async (category: Category): Promise<void> => {
   try {
     const categoryId = await generateRandomId("categories");
     const docRef = doc(db, "categories", categoryId); // Use category.id as the document ID
+    category.id = categoryId
     await setDoc(docRef, category);
     console.log("Category added with custom ID:", categoryId);
   } catch (error) {
