@@ -27,7 +27,10 @@ const CardAvailableItems = () => {
   const loadItems = async (uid: string) => {
     setIsLoading(true);
     const fetchedItems = await fetchUserItems(uid);
-    setItems(fetchedItems);
+    setItems(fetchedItems.map((item) => ({
+      ...item,
+      price: `$${item.price}`, // Ensure price is formatted as a string with a dollar sign
+    })));
     setIsLoading(false);
   };
 
