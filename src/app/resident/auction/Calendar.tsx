@@ -29,7 +29,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ auctions }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6 m-4">
       <h2 className="text-2xl font-bold text-center mb-4">Upcoming Auctions</h2>
-      <Calendar fullscreen={false} dateCellRender={renderCalendar} />
+      <Calendar fullscreen={false} cellRender={renderCalendar} />
     </div>
   );
 };
