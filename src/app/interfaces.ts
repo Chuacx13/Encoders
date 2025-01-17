@@ -90,3 +90,10 @@ export interface Task {
   assignedTo: string;
   status: 'pending' | 'in progress' | 'completed'; 
 }
+
+export interface InventoryLog {
+  itemName: string;
+  itemId: string;
+  quantity: number;
+  updateDate: Date;
+}
