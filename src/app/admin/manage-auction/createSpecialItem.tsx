@@ -6,14 +6,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { db } from "@/firebase/firebase";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
-import { SpecialItem } from "@/app/interfaces";
+import { Heading } from "@/components/ui/heading";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const specialItemSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
 });
 
-type SpecialItemFormValues = Omit<SpecialItem, "id"  | "currentBid">;
+type SpecialItemFormValues = {
+  name: string;
+  description: string;
+};
 
 const CreateSpecialItem: React.FC = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<SpecialItemFormValues>({
@@ -30,7 +35,6 @@ const CreateSpecialItem: React.FC = () => {
         highestBidderId: "",
       });
 
-      // Update the document with the ID as part of the data
       await updateDoc(doc(db, "specialItems", docRef.id), { id: docRef.id });
 
       toast.success("Special item created successfully!");
@@ -42,35 +46,31 @@ const CreateSpecialItem: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-lg rounded-3xl p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Add Special Item</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="bg-white p-8 rounded-lg shadow-md">
+      <Heading title="Add Special Item" description="Fill in the details to add a new special item." />
+      <Separator />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
         <div>
           <label className="block text-sm font-medium text-gray-700">Name</label>
           <input
             {...register("name")}
             placeholder="Enter item name"
-            className={`mt-1 block w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? "border-red-500" : "border-gray-300"}`}
+            className={`mt-2 block w-full rounded-md border px-4 py-2 focus:ring-2 focus:ring-blue-400 ${errors.name ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+          {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>}
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
             {...register("description")}
             placeholder="Enter item description"
-            className={`mt-1 block w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? "border-red-500" : "border-gray-300"}`}
+            className={`mt-2 block w-full rounded-md border px-4 py-2 focus:ring-2 focus:ring-blue-400 ${errors.description ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+          {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>}
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg text-lg font-medium shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
+        <Button type="submit" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600">
           Create Special Item
-        </button>
+        </Button>
       </form>
     </div>
   );

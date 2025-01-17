@@ -85,7 +85,7 @@ export interface Task {
   id: string; 
   name: string;
   description: string; 
-  rewardPoints: number; 
+  rewardPoints: string; 
   awardedTo: string | null; 
-  status: 'pending' | 'completed' | 'in-progress'; 
+  status: 'pending' | 'completed'; 
 }

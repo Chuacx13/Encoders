@@ -4,7 +4,7 @@ import CreateAuction from "./createAuction";
 
 const Page: React.FC = () => {
   return (
-    <div className="p-8 space-y-8">
+    <div className="space-y-8 p-8">
       <CreateSpecialItem />
       <CreateAuction />
     </div>
