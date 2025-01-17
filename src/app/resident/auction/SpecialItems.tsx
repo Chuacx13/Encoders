@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Button, Input } from "antd";
+import { Input } from "antd";
 import { SpecialItem } from "@/app/interfaces";
 
 interface SpecialItemsCarouselProps {

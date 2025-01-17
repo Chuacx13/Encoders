@@ -80,3 +80,12 @@ export interface Auction {
   currentBid: number;
   auctionDate: string;
 }
+
+export interface Task {
+  id: string; 
+  name: string;
+  description: string; 
+  rewardPoints: number; 
+  awardedTo: string | null; 
+  status: 'pending' | 'completed' | 'in-progress'; 
+}
