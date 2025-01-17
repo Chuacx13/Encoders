@@ -11,16 +11,18 @@ import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "react-hot-toast";
 
-const PendingTasksForUsers: React.FC = () => {
+const TasksForUsers: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [userTasks, setUserTasks] = useState<Task[]>([]);
   const [userUid, setUserUid] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<"available" | "myTasks">("available");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserUid(user.uid);
-        fetchTasks();
+        fetchTasks(user.uid);
       } else {
         setUserUid(null);
         toast.error("You must be logged in to view tasks");
@@ -30,19 +32,30 @@ const PendingTasksForUsers: React.FC = () => {
     return () => unsubscribe(); // Clean up subscription on unmount
   }, []);
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (uid: string) => {
     try {
+      // Fetch all available tasks
       const taskCollection = collection(db, "task");
       const pendingQuery = query(taskCollection, where("status", "==", "pending"));
-      const taskSnapshot = await getDocs(pendingQuery);
-      const taskList = taskSnapshot.docs.map((doc) => {
-        const taskData = doc.data() as Task;
-        return {
-          ...taskData,
-          id: doc.id,
-        };
-      });
-      setTasks(taskList);
+      const assignedQuery = query(taskCollection, where("assignedTo", "==", uid));
+
+      const [pendingSnapshot, assignedSnapshot] = await Promise.all([
+        getDocs(pendingQuery),
+        getDocs(assignedQuery),
+      ]);
+
+      const pendingTasks = pendingSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Task[];
+
+      const assignedTasks = assignedSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Task[];
+
+      setTasks(pendingTasks);
+      setUserTasks(assignedTasks);
     } catch (error) {
       toast.error("Error fetching tasks");
     }
@@ -63,8 +76,8 @@ const PendingTasksForUsers: React.FC = () => {
         status: "in-progress",
       });
 
-      // Update local state
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
+      // Refresh tasks after accepting
+      fetchTasks(userUid);
 
       toast.success("Task accepted successfully");
     } catch (error) {
@@ -75,7 +88,34 @@ const PendingTasksForUsers: React.FC = () => {
     }
   };
 
-  const columns = [
+  const handleQuitTask = async (taskId: string) => {
+    if (!userUid) {
+      toast.error("You must be logged in to quit a task");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const taskDoc = doc(db, "task", taskId);
+      await updateDoc(taskDoc, {
+        assignedTo: null,
+        status: "pending",
+      });
+
+      // Refresh tasks after quitting
+      fetchTasks(userUid);
+
+      toast.success("You have quit the task");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error quitting task");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const availableColumns = [
     { accessorKey: "name", header: "Task Name" },
     { accessorKey: "description", header: "Description" },
     { accessorKey: "rewardPoints", header: "Reward Points" },
@@ -86,9 +126,32 @@ const PendingTasksForUsers: React.FC = () => {
         <Button
           onClick={() => handleAcceptTask(row.original.id)}
           disabled={loading}
-          variant="secondary"
+          className={`px-4 py-2 rounded-md text-white font-semibold ${
+            loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+          }`}
         >
-          Accept
+          {loading ? "Processing..." : "Accept"}
+        </Button>
+      ),
+    },
+  ];
+
+  const userTasksColumns = [
+    { accessorKey: "name", header: "Task Name" },
+    { accessorKey: "description", header: "Description" },
+    { accessorKey: "rewardPoints", header: "Reward Points" },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }: { row: { original: Task } }) => (
+        <Button
+          onClick={() => handleQuitTask(row.original.id)}
+          disabled={loading}
+          className={`px-4 py-2 rounded-md text-white font-semibold ${
+            loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+          }`}
+        >
+          {loading ? "Processing..." : "Quit"}
         </Button>
       ),
     },
@@ -96,22 +159,31 @@ const PendingTasksForUsers: React.FC = () => {
 
   return (
     <div className="container mx-auto p-8 space-y-8">
-      <Heading
-        title="Available Tasks"
-        description="Browse and accept pending tasks."
-      />
+      <Heading title="Tasks" description="Manage your tasks or accept new ones." />
       <Separator />
-      {userUid ? (
-        <DataTable
-          columns={columns}
-          data={tasks}
-          searchKey="name"
-        />
-      ) : (
-        <div className="text-center text-gray-600">Please log in to view tasks</div>
+      <div className="flex space-x-4">
+        <Button
+          variant={selectedTab === "available" ? "secondary" : "outline"}
+          onClick={() => setSelectedTab("available")}
+        >
+          Available Tasks
+        </Button>
+        <Button
+          variant={selectedTab === "myTasks" ? "secondary" : "outline"}
+          onClick={() => setSelectedTab("myTasks")}
+        >
+          My Tasks
+        </Button>
+      </div>
+      <Separator />
+      {selectedTab === "available" && (
+        <DataTable columns={availableColumns} data={tasks} searchKey="name" />
+      )}
+      {selectedTab === "myTasks" && (
+        <DataTable columns={userTasksColumns} data={userTasks} searchKey="name" />
       )}
     </div>
   );
 };
 
-export default PendingTasksForUsers;
+export default TasksForUsers;
