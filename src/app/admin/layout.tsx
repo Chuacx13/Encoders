@@ -14,6 +14,7 @@ import {
   IconShoppingBag,
   IconHammer, 
   IconClipboardText,
+  IconBuildingWarehouse
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
@@ -89,6 +90,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     {
       label: "Mangage Auction",
       href: "/admin/manage-auction",
+      icon: (
+        <IconHammer className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Inventory History",
+      href: "/admin/inventory-history",
       icon: (
         <IconHammer className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
