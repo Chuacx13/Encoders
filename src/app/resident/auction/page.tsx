@@ -84,42 +84,42 @@ const AuctionSystem: React.FC = () => {
 
   const handleBid = async (itemId: string) => {
     if (!userUid || !userName) return;
-  
+
     const item = specialItems.find((item) => item.id === itemId);
     const bidAmount = bidAmounts[itemId] || 0;
-  
+
     if (item && bidAmount > item.currentBid && voucherPoints >= bidAmount) {
       try {
         const itemDocRef = doc(db, "specialItems", itemId);
-  
+
         // Deduct voucher points from the current user
         const currentUserDocRef = doc(db, "residents", userUid);
         await updateDoc(currentUserDocRef, {
           voucherPoints: voucherPoints - bidAmount,
         });
-  
+
         setVoucherPoints((prevPoints) => prevPoints - bidAmount);
-  
+
         // Refund previous highest bidder if applicable
         if (item.highestBidderId && item.highestBidderId !== userUid) {
           const lastBidderDocRef = doc(db, "residents", item.highestBidderId);
           const lastBidderSnapshot = await getDoc(lastBidderDocRef);
-  
+
           if (lastBidderSnapshot.exists()) {
             const lastBidderData = lastBidderSnapshot.data();
             const updatedPoints = (lastBidderData.voucherPoints || 0) + item.currentBid;
-  
+
             await updateDoc(lastBidderDocRef, { voucherPoints: updatedPoints });
           }
         }
-  
+
         // Update the Firestore document for the item
         await updateDoc(itemDocRef, {
           currentBid: bidAmount,
           highestBidderId: userUid,
           bidderName: userName,
         });
-  
+
         // Update local state for special items
         const updatedItem = {
           ...item,
@@ -130,7 +130,7 @@ const AuctionSystem: React.FC = () => {
         setSpecialItems((prevItems) =>
           prevItems.map((i) => (i.id === itemId ? updatedItem : i))
         );
-  
+
         alert(`You have successfully bid ${bidAmount} points on ${item.name}`);
       } catch (error) {
         console.error("Error placing bid:", error);
@@ -138,6 +138,44 @@ const AuctionSystem: React.FC = () => {
       }
     } else {
       alert("Insufficient points or bid too low!");
+    }
+  };
+
+  const processSoldItems = async () => {
+    try {
+      const specialItemsCollection = collection(db, "specialItems");
+      const specialItemsSnapshot = await getDocs(specialItemsCollection);
+      const itemsToProcess = specialItemsSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() } as SpecialItem))
+        .filter((item) => item.highestBidderId && item.status !== "sold");
+  
+      for (const item of itemsToProcess) {
+        const { highestBidderId, id } = item;
+  
+        const residentDocRef = doc(db, "residents", highestBidderId);
+        const residentSnapshot = await getDoc(residentDocRef);
+  
+        if (residentSnapshot.exists()) {
+          const residentData = residentSnapshot.data();
+          const updatedSpecialItems = [...(residentData.specialItems || []), id];
+  
+          await updateDoc(residentDocRef, {
+            specialItems: updatedSpecialItems,
+          });
+  
+          const specialItemDocRef = doc(db, "specialItems", id);
+          await updateDoc(specialItemDocRef, {
+            status: "sold",
+          });
+  
+          console.log(`Item ${id} marked as sold and assigned to ${residentData.name}`);
+        }
+      }
+  
+      alert("Sold items processed successfully!");
+    } catch (error) {
+      console.error("Error processing sold items:", error);
+      alert("Failed to process sold items.");
     }
   };
   
@@ -163,6 +201,12 @@ const AuctionSystem: React.FC = () => {
 
       <footer className="bg-gray-800 text-white py-4 text-center">
         <p className="text-sm">Auction System © 2025. All Rights Reserved.</p>
+        <button
+          onClick={processSoldItems}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          Process Sold Items
+        </button>
       </footer>
     </div>
   );
