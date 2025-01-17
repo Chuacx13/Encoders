@@ -1,0 +1,93 @@
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.carousel-arrow {
+  background: none;
+  border: none;
+  color: #1890ff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.carousel-arrow:hover {
+  transform: scale(1.2);
+}
+
+.carousel-card {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.carousel-card-content {
+  padding: 20px;
+}
+
+.carousel-item-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.carousel-item-description {
+  font-size: 1rem;
+  color: #666;
+}
+
+.carousel-item-bid, .carousel-item-bidder {
+  font-size: 1.1rem;
+  margin: 8px 0;
+}
+
+.highlight {
+  color: #1890ff;
+  font-weight: bold;
+}
+
+.bid-section {
+  margin-top: 16px;
+}
+
+.bid-input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.bid-button {
+  width: 100%;
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.indicator-dot.active {
+  background: #1890ff;
+}

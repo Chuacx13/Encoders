@@ -69,6 +69,8 @@ export interface SpecialItem {
   currentBid: number;
   highestBidder?: string;
   status: "available" | "sold";
+  highestBidderId: string;
+  bidderName: string;
 }
 
 export interface Auction {
@@ -77,5 +79,4 @@ export interface Auction {
   description: string;
   currentBid: number;
   auctionDate: string;
-  highestBidder: string;
 }
