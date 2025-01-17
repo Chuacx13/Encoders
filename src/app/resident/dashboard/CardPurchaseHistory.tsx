@@ -1,55 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card } from "antd";
 import { ShoppingOutlined } from "@ant-design/icons";
 import { Text } from "@/app/(components)/Text";
-import { auth } from "@/firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { fetchUserItems } from "@/app/api";
-import { OrderItem } from "@/app/interfaces";
+import { mockPurchaseHistory } from "./mockPurchaseHistory";
 
-const CardAvailableItems = () => {
-  const [items, setItems] = useState<OrderItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loadItems(user.uid);
-      } else {
-        console.error("No user is signed in.");
-        setIsLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const loadItems = async (uid: string) => {
-    setIsLoading(true);
-    const fetchedItems = await fetchUserItems(uid);
-    setItems(fetchedItems.map((item) => ({
-      ...item,
-      price: `$${item.price}`, // Ensure price is formatted as a string with a dollar sign
-    })));
-    setIsLoading(false);
-  };
+const CardPurchaseHistory = () => {
+  const purchases = mockPurchaseHistory;
+  const isLoading = false;
 
   return (
     <Card
       style={{
         height: "100%",
-        gridRow: "1 / 3",
       }}
       title={
         <div
           style={{
             display: "flex",
             alignItems: "center",
+            gap: "8px",
           }}
         >
           <ShoppingOutlined />
           <Text size="sm" style={{ marginLeft: "0.7rem" }}>
-            Purchased Items
+            Purchase History
           </Text>
         </div>
       }
@@ -58,21 +32,16 @@ const CardAvailableItems = () => {
         <div className="m-5">Loading...</div>
       ) : (
         <div className="overflow-auto h-full">
-          {items.map((item) => (
+          {purchases.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between py-4 border-b"
+              className="flex items-center justify-between gap-3 py-4 border-b"
             >
               <div className="flex flex-col gap-1">
                 <div className="font-bold text-gray-700">{item.name}</div>
-                <div className="font-bold text-blue-500 text-xs">
-                  Price: {item.price}
-                </div>
-                <div className="text-sm text-gray-500">
-                  Date Purchased: {item.datePurchased}
-                </div>
+                <div className="text-sm text-gray-500">Price: {item.price}</div>
                 <div className="text-sm text-gray-400">
-                  Category: {item.category.name}
+                  Date Purchased: {new Date(item.datePurchased).toLocaleDateString()}
                 </div>
               </div>
             </div>
@@ -83,4 +52,4 @@ const CardAvailableItems = () => {
   );
 };
 
-export default CardAvailableItems;
+export default CardPurchaseHistory;
