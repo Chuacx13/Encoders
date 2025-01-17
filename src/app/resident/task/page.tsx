@@ -45,6 +45,7 @@ const PendingTasksForUsers: React.FC = () => {
       setTasks(taskList);
     } catch (error) {
       toast.error("Error fetching tasks");
+      console.log(error);
     }
   };
 

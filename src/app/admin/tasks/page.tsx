@@ -33,8 +33,9 @@ const TaskManager: React.FC = () => {
           };
         });
         setTasks(taskList);
-      } catch (_) {
+      } catch (error) {
         toast.error("Error fetching tasks");
+        console.log(error);
       }
     };
   
