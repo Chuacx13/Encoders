@@ -82,7 +82,10 @@ const InventoryPage: React.FC = () => {
                   index % 2 === 0 ? "bg-gray-700" : "bg-gray-800"
                 } hover:bg-gray-600`}
               >
-                <td className="py-4 px-6">{log.updateDate}</td>
+                <td className="py-4 px-6"> {log.updateDate.toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}</td>
                 <td className="py-4 px-6">{log.itemName}</td>
                 <td className="py-4 px-6">{log.itemId}</td>
                 <td className="py-4 px-6">{log.quantity}</td>
