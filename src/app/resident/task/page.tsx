@@ -58,6 +58,7 @@ const TasksForUsers: React.FC = () => {
       setUserTasks(assignedTasks);
     } catch (error) {
       toast.error("Error fetching tasks");
+      console.log(error);
     }
   };
 

@@ -72,6 +72,7 @@ export interface SpecialItem {
   status: "available" | "sold";
   highestBidderId: string;
   bidderName: string;
+  
 }
 
 export interface Auction {
@@ -90,4 +91,11 @@ export interface Task {
   awardedTo: string | null; 
   assignedTo: string;
   status: 'pending' | 'in progress' | 'completed'; 
+}
+
+export interface InventoryLog {
+  itemName: string;
+  itemId: string;
+  quantity: number;
+  updateDate: Date;
 }

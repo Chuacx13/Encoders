@@ -1,6 +1,6 @@
 import { db } from "@/firebase/firebase";
-import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { Voucher, Item, OrderItem, Admin, Resident, BillboardType, Image, Category } from "@/app/interfaces";
+import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, addDoc } from "firebase/firestore";
+import { Voucher, Item, OrderItem, Admin, Resident, BillboardType, Image, Category, InventoryLog } from "@/app/interfaces";
 
 // Generate random id
 const generateRandomId = async (docName: string): Promise<string> => {
@@ -419,6 +419,16 @@ export const addItem = async (item: Item): Promise<void> => {
     item.id = Number(itemId);
     await setDoc(docRef, item);
     console.log("Item added with custom ID:", itemId);
+
+    const logEntry: InventoryLog = {
+      itemName: item.name,
+      itemId: item.id.toString(),
+      quantity: item.quantity,
+      updateDate: new Date(),
+    };
+
+    await addDoc(collection(db, "inventory_logs"), logEntry);
+    console.log("Inventory log added:", logEntry);
   } catch (error) {
     console.error("Error adding item:", error);
     throw new Error("Failed to add item");
@@ -426,14 +436,42 @@ export const addItem = async (item: Item): Promise<void> => {
 };
 
 // Update Item
-export const updateItem = async (itemId: string, updatedData: Partial<Item>): Promise<void> => {
+export const updateItem = async (
+  itemId: string,
+  updatedData: Partial<Item>
+): Promise<void> => {
   try {
-    const docRef = doc(db, "items", itemId); 
-    await updateDoc(docRef, updatedData); 
+    const docRef = doc(db, "inventory_logs", itemId);
+
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      throw new Error("Item not found");
+    }
+
+    const currentItem = docSnap.data() as Item;
+
+    if (updatedData.quantity !== undefined) {
+      const quantityChange = updatedData.quantity - currentItem.quantity;
+
+      if (quantityChange !== 0) {
+        const logEntry: InventoryLog = {
+          itemName: currentItem.name,
+          itemId: currentItem.id.toString(),
+          quantity: quantityChange,
+          updateDate: new Date(),
+        };
+
+        await addDoc(collection(db, "inventory_logs"), logEntry);
+        console.log("Inventory log added:", logEntry);
+      }
+    }
+
+    const itemRef = doc(db, "items", itemId);
+    await updateDoc(itemRef, updatedData);
     console.log("Item updated successfully:", itemId);
   } catch (error) {
-    console.error("Error updating item:", error);
-    throw new Error("Failed to update item");
+    console.error("Error updating inventory item:", error);
+    throw new Error("Failed to update inventory item");
   }
 };
 
@@ -501,5 +539,19 @@ export const fetchUserVoucherPoints = async (uid: string): Promise<number> => {
   } catch (error) {
     console.error("Error fetching user voucher points:", error);
     return 0;
+  }
+};
+
+// Fetch all inventory logs
+export const getAllInventoryItems = async (): Promise<InventoryLog[]> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "inventory_logs"));
+    const logs: InventoryLog[] = querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as InventoryLog)
+    }));
+    return logs;
+  } catch (error) {
+    console.error("Error fetching inventory logs:", error);
+    throw new Error("Failed to fetch inventory logs");
   }
 };
