@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, addDoc, updateDoc, getDocs, doc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, getDocs, doc, query, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { Task } from "@/app/interfaces";
 import { Heading } from "@/components/ui/heading";
@@ -11,7 +11,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { TaskCreateForm } from "./TaskCreateForm";
 import { TaskReviewForm } from "./TaskReviewForm";
 import { toast } from "react-hot-toast";
-import { query, where } from "firebase/firestore";
 
 const TaskManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -70,46 +69,52 @@ const TaskManager: React.FC = () => {
   const handleAssignTask = async (taskId: string, awardedTo: string) => {
     try {
       setLoading(true);
-  
-      // Update the task in Firestore
-      const taskDoc = doc(db, "task", taskId);
+
+      // Find the task
       const task = tasks.find((t) => t.id === taskId);
       if (!task) {
         toast.error("Task not found");
         return;
       }
-  
-      await updateDoc(taskDoc, { awardedTo });
-  
-      // Fetch the resident document by `awardedTo` identifier
+
+      // Update the task in Firestore: set awardedTo and status to 'completed'
+      const taskDoc = doc(db, "task", taskId);
+      await updateDoc(taskDoc, {
+        awardedTo,
+        status: "completed",
+      });
+
+      // Fetch the resident document by `awardedTo`
       const residentsCollection = collection(db, "residents");
       const residentQuery = query(residentsCollection, where("id", "==", awardedTo));
       const residentSnapshot = await getDocs(residentQuery);
-  
+
       if (residentSnapshot.empty) {
         toast.error("Resident not found");
         return;
       }
-  
+
       const residentDoc = residentSnapshot.docs[0];
       const residentData = residentDoc.data() as { voucherPoints: number };
-  
+
       // Add rewardPoints to the resident's voucherPoints
       const updatedVoucherPoints =
         (residentData.voucherPoints || 0) + parseInt(task.rewardPoints, 10);
-  
+
       await updateDoc(doc(db, "residents", residentDoc.id), {
         voucherPoints: updatedVoucherPoints,
       });
-  
+
       // Update local state
       setTasks((prev) =>
         prev.map((t) =>
-          t.id === taskId ? { ...t, awardedTo } : t
+          t.id === taskId
+            ? { ...t, awardedTo, status: "completed" }
+            : t
         )
       );
-  
-      toast.success("Task assigned and voucher points updated successfully");
+
+      toast.success("Task assigned, marked as completed, and voucher points updated successfully");
     } catch (error) {
       console.error(error);
       toast.error("Error assigning task or updating resident");
@@ -117,7 +122,6 @@ const TaskManager: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   const columnsForView = [
     { accessorKey: "name", header: "Task Name" },
@@ -180,7 +184,7 @@ const TaskManager: React.FC = () => {
       {selectedTab === "review" && (
         <DataTable
           columns={columnsForReview}
-          data={tasks}
+          data={tasks.filter((task) => task.status === "pending")} // Only pending tasks
           searchKey="name"
         />
       )}
