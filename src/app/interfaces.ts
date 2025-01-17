@@ -39,6 +39,7 @@ export interface Resident {
   purchasedItems: Array<number>;
   voucher: Array<number>;
   voucherPoints: number;
+  specialItems: Array<string>;
 }
 
 export interface BillboardType {

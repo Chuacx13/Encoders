@@ -63,7 +63,7 @@ export default function ResidentLayout({ children }: ResidentLayoutProps) {
     },
     {
       label: "Auction",
-      href: "/residnt/auction",
+      href: "/resident/auction",
       icon: <IconFunction className="text-neutral-800 dark:text-neutral-200" />,
     },
     {

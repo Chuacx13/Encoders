@@ -1,199 +1,215 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { collection, addDoc, updateDoc, getDocs, doc, query, where } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { auth } from "@/firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import { Task } from "@/app/interfaces";
-import { Heading } from "@/components/ui/heading";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { DataTable } from "@/components/ui/data-table";
-import { TaskCreateForm } from "./TaskCreateForm";
-import { TaskReviewForm } from "./TaskReviewForm";
-import { toast } from "react-hot-toast";
+import { fetchUserVoucherPoints } from "@/app/api";
+import { Auction, SpecialItem } from "@/app/interfaces";
+import Header from "@/app/resident/auction/Header";
+import SpecialItemsCarousel from "@/app/resident/auction/SpecialItems";
+import CalendarView from "@/app/resident/auction/Calendar";
 
-const TaskManager: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTab, setSelectedTab] = useState<"create" | "view" | "review">(
-    "create"
-  );
-  const [loading, setLoading] = useState(false);
+const AuctionSystem: React.FC = () => {
+  const [userUid, setUserUid] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [voucherPoints, setVoucherPoints] = useState<number>(0);
+  const [specialItems, setSpecialItems] = useState<SpecialItem[]>([]);
+  const [auctions, setAuctions] = useState<Auction[]>([]);
+  const [bidAmounts, setBidAmounts] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const taskCollection = collection(db, "task");
-        const taskSnapshot = await getDocs(taskCollection);
-        const taskList = taskSnapshot.docs.map((doc) => {
-          const taskData = doc.data() as Task;
-          return {
-            ...taskData,
-            id: doc.id,
-            rewardPoints: String(taskData.rewardPoints),
-          };
-        });
-        setTasks(taskList);
-      } catch (_) {
-        toast.error("Error fetching tasks");
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUserUid(currentUser.uid);
+        const userDoc = doc(db, "residents", currentUser.uid);
+        const userSnapshot = await getDoc(userDoc);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          setUserName(userData.name || "Anonymous");
+        } else {
+          setUserName(currentUser.displayName || "Anonymous");
+        }
+        loadUserVoucherPoints(currentUser.uid);
+        fetchSpecialItems();
+        fetchAuctions();
+      } else {
+        console.error("No user is signed in.");
       }
-    };
-  
-    fetchTasks();
-  }, []);  
+    });
 
-  const handleCreateTask = async (data: { name: string; description: string; rewardPoints: string }) => {
-    try {
-      setLoading(true);
-      const docRef = await addDoc(collection(db, "task"), {
-        ...data,
-        status: "pending",
-        assignedTo: "",
-        awardedTo: null,
-      });
-      setTasks((prev) => [
-        ...prev,
-        {
-          ...data,
-          id: docRef.id,
-          status: "pending",
-          awardedTo: null,
-          assignedTo: "",
-        },
-      ]);
-      toast.success("Task created successfully");
-    } catch (_) {
-      toast.error("Error creating task");
-    }
-     finally {
-      setLoading(false);
-    }
+    return () => unsubscribe();
+  }, []);
+
+  const loadUserVoucherPoints = async (uid: string) => {
+    const points = await fetchUserVoucherPoints(uid);
+    setVoucherPoints(points);
   };
 
-  const handleAssignTask = async (taskId: string, awardedTo: string) => {
+  const fetchSpecialItems = async () => {
     try {
-      setLoading(true);
-
-      // Find the task
-      const task = tasks.find((t) => t.id === taskId);
-      if (!task) {
-        toast.error("Task not found");
-        return;
-      }
-
-      // Update the task in Firestore: set awardedTo and status to 'completed'
-      const taskDoc = doc(db, "task", taskId);
-      await updateDoc(taskDoc, {
-        awardedTo,
-        status: "completed",
-      });
-
-      // Fetch the resident document by `awardedTo`
-      const residentsCollection = collection(db, "residents");
-      const residentQuery = query(residentsCollection, where("id", "==", awardedTo));
-      const residentSnapshot = await getDocs(residentQuery);
-
-      if (residentSnapshot.empty) {
-        toast.error("Resident not found");
-        return;
-      }
-
-      const residentDoc = residentSnapshot.docs[0];
-      const residentData = residentDoc.data() as { voucherPoints: number };
-
-      // Add rewardPoints to the resident's voucherPoints
-      const updatedVoucherPoints =
-        (residentData.voucherPoints || 0) + parseInt(task.rewardPoints, 10);
-
-      await updateDoc(doc(db, "residents", residentDoc.id), {
-        voucherPoints: updatedVoucherPoints,
-      });
-
-      // Update local state
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === taskId
-            ? { ...t, awardedTo, status: "completed" }
-            : t
-        )
-      );
-
-      toast.success("Task assigned, marked as completed, and voucher points updated successfully");
+      const specialItemsCollection = collection(db, "specialItems");
+      const specialItemsSnapshot = await getDocs(specialItemsCollection);
+      const items = specialItemsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as SpecialItem[];
+      setSpecialItems(items);
     } catch (error) {
-      console.error("Error assigning task or updating resident:", error);
-      toast.error("Error assigning task or updating resident");
-    }
-     finally {
-      setLoading(false);
+      console.error("Error fetching special items:", error);
     }
   };
 
-  const columnsForView = [
-    { accessorKey: "name", header: "Task Name" },
-    { accessorKey: "description", header: "Description" },
-    { accessorKey: "rewardPoints", header: "Reward Points" },
-    { accessorKey: "status", header: "Status" },
-  ];
+  const fetchAuctions = async () => {
+    try {
+      const auctionsCollection = collection(db, "auctions");
+      const auctionsSnapshot = await getDocs(auctionsCollection);
+      const auctionData = auctionsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Auction[];
+      setAuctions(auctionData);
+    } catch (error) {
+      console.error("Error fetching auctions:", error);
+    }
+  };
 
-  const columnsForReview = [
-    { accessorKey: "name", header: "Task Name" },
-    { accessorKey: "description", header: "Description" },
-    { accessorKey: "rewardPoints", header: "Reward Points" },
-    {
-      accessorKey: "actions",
-      header: "Reward",
-      cell: ({ row }: { row: { original: Task } }) => (
-        <TaskReviewForm
-          taskId={row.original.id}
-          onAssign={handleAssignTask}
-          loading={loading}
-        />
-      ),
-    },
-  ];
+  const handleBidChange = (itemId: string, value: number) => {
+    setBidAmounts((prev) => ({
+      ...prev,
+      [itemId]: value,
+    }));
+  };
+
+  const handleBid = async (itemId: string) => {
+    if (!userUid || !userName) return;
+
+    const item = specialItems.find((item) => item.id === itemId);
+    const bidAmount = bidAmounts[itemId] || 0;
+
+    if (item && bidAmount > item.currentBid && voucherPoints >= bidAmount) {
+      try {
+        const itemDocRef = doc(db, "specialItems", itemId);
+
+        // Deduct voucher points from the current user
+        const currentUserDocRef = doc(db, "residents", userUid);
+        await updateDoc(currentUserDocRef, {
+          voucherPoints: voucherPoints - bidAmount,
+        });
+
+        setVoucherPoints((prevPoints) => prevPoints - bidAmount);
+
+        // Refund previous highest bidder if applicable
+        if (item.highestBidderId && item.highestBidderId !== userUid) {
+          const lastBidderDocRef = doc(db, "residents", item.highestBidderId);
+          const lastBidderSnapshot = await getDoc(lastBidderDocRef);
+
+          if (lastBidderSnapshot.exists()) {
+            const lastBidderData = lastBidderSnapshot.data();
+            const updatedPoints = (lastBidderData.voucherPoints || 0) + item.currentBid;
+
+            await updateDoc(lastBidderDocRef, { voucherPoints: updatedPoints });
+          }
+        }
+
+        // Update the Firestore document for the item
+        await updateDoc(itemDocRef, {
+          currentBid: bidAmount,
+          highestBidderId: userUid,
+          bidderName: userName,
+        });
+
+        // Update local state for special items
+        const updatedItem = {
+          ...item,
+          currentBid: bidAmount,
+          highestBidderId: userUid,
+          bidderName: userName,
+        };
+        setSpecialItems((prevItems) =>
+          prevItems.map((i) => (i.id === itemId ? updatedItem : i))
+        );
+
+        alert(`You have successfully bid ${bidAmount} points on ${item.name}`);
+      } catch (error) {
+        console.error("Error placing bid:", error);
+        alert("Failed to place bid. Please try again.");
+      }
+    } else {
+      alert("Insufficient points or bid too low!");
+    }
+  };
+
+  const processSoldItems = async () => {
+    try {
+      const specialItemsCollection = collection(db, "specialItems");
+      const specialItemsSnapshot = await getDocs(specialItemsCollection);
+      const itemsToProcess = specialItemsSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() } as SpecialItem))
+        .filter((item) => item.highestBidderId && item.status !== "sold");
+  
+      for (const item of itemsToProcess) {
+        const { highestBidderId, id } = item;
+  
+        const residentDocRef = doc(db, "residents", highestBidderId);
+        const residentSnapshot = await getDoc(residentDocRef);
+  
+        if (residentSnapshot.exists()) {
+          const residentData = residentSnapshot.data();
+          const updatedSpecialItems = [...(residentData.specialItems || []), id];
+  
+          await updateDoc(residentDocRef, {
+            specialItems: updatedSpecialItems,
+          });
+  
+          const specialItemDocRef = doc(db, "specialItems", id);
+          await updateDoc(specialItemDocRef, {
+            status: "sold",
+          });
+  
+          console.log(`Item ${id} marked as sold and assigned to ${residentData.name}`);
+        }
+      }
+  
+      alert("Sold items processed successfully!");
+    } catch (error) {
+      console.error("Error processing sold items:", error);
+      alert("Failed to process sold items.");
+    }
+  };
+  
 
   return (
-    <div className="container mx-auto p-8 space-y-8">
-      <div className="flex items-center justify-between">
-        <Heading title="Task Manager" description="Create, view, and review tasks." />
-        <div className="flex space-x-4">
-          <Button
-            variant={selectedTab === "create" ? "secondary" : "outline"}
-            onClick={() => setSelectedTab("create")}
-          >
-            Create Task
-          </Button>
-          <Button
-            variant={selectedTab === "view" ? "secondary" : "outline"}
-            onClick={() => setSelectedTab("view")}
-          >
-            View Tasks
-          </Button>
-          <Button
-            variant={selectedTab === "review" ? "secondary" : "outline"}
-            onClick={() => setSelectedTab("review")}
-          >
-            Review Task
-          </Button>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header userUid={userUid} userName={userName} voucherPoints={voucherPoints} />
+
+      <div className="p-6">
+        {specialItems.length > 0 ? (
+          <SpecialItemsCarousel
+            specialItems={specialItems}
+            bidAmounts={bidAmounts}
+            handleBidChange={handleBidChange}
+            handleBid={handleBid}
+          />
+        ) : (
+          <p className="text-center">No special items available.</p>
+        )}
       </div>
-      <Separator />
-      {selectedTab === "create" && <TaskCreateForm onSubmit={handleCreateTask} loading={loading} />}
-      {selectedTab === "view" && (
-        <DataTable
-          columns={columnsForView}
-          data={tasks.filter((task) => task.status === "pending" || task.status === "in progress")} 
-          searchKey="name"
-        />
-      )}
-      {selectedTab === "review" && (
-        <DataTable
-          columns={columnsForReview}
-          data={tasks.filter((task) => task.status === "pending")} // Only pending tasks
-          searchKey="name"
-        />
-      )}
+
+      <CalendarView auctions={auctions} />
+
+      <footer className="bg-gray-800 text-white py-4 text-center">
+        <p className="text-sm">Auction System © 2025. All Rights Reserved.</p>
+        <button
+          onClick={processSoldItems}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          Process Sold Items
+        </button>
+      </footer>
     </div>
   );
 };
 
-export default TaskManager;
+export default AuctionSystem;
