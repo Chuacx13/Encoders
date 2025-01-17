@@ -33,13 +33,13 @@ const TaskManager: React.FC = () => {
           };
         });
         setTasks(taskList);
-      } catch (error) {
+      } catch (_) {
         toast.error("Error fetching tasks");
       }
     };
-
+  
     fetchTasks();
-  }, []);
+  }, []);  
 
   const handleCreateTask = async (data: { name: string; description: string; rewardPoints: string }) => {
     try {
@@ -47,6 +47,7 @@ const TaskManager: React.FC = () => {
       const docRef = await addDoc(collection(db, "task"), {
         ...data,
         status: "pending",
+        assignedTo: "",
         awardedTo: null,
       });
       setTasks((prev) => [
@@ -56,12 +57,14 @@ const TaskManager: React.FC = () => {
           id: docRef.id,
           status: "pending",
           awardedTo: null,
+          assignedTo: "",
         },
       ]);
       toast.success("Task created successfully");
-    } catch (error) {
+    } catch (_) {
       toast.error("Error creating task");
-    } finally {
+    }
+     finally {
       setLoading(false);
     }
   };
@@ -116,9 +119,10 @@ const TaskManager: React.FC = () => {
 
       toast.success("Task assigned, marked as completed, and voucher points updated successfully");
     } catch (error) {
-      console.error(error);
+      console.error("Error assigning task or updating resident:", error);
       toast.error("Error assigning task or updating resident");
-    } finally {
+    }
+     finally {
       setLoading(false);
     }
   };
@@ -177,7 +181,7 @@ const TaskManager: React.FC = () => {
       {selectedTab === "view" && (
         <DataTable
           columns={columnsForView}
-          data={tasks.filter((task) => task.status === "pending")}
+          data={tasks.filter((task) => task.status === "pending" || task.status === "in progress")} 
           searchKey="name"
         />
       )}
