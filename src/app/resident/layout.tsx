@@ -9,6 +9,7 @@ import {
   IconUserBolt,
   IconShoppingBag,
   IconFunction,
+  IconClipboardCheckFilled,
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { signOut } from "firebase/auth";
@@ -47,6 +48,13 @@ export default function ResidentLayout({ children }: ResidentLayoutProps) {
       ),
     },
     {
+      label: "Tasks",
+      href: "/resident/task",
+      icon: (
+        <IconClipboardCheckFilled className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
       label: "Shop",
       href: "/shop",
       icon: (
@@ -55,7 +63,7 @@ export default function ResidentLayout({ children }: ResidentLayoutProps) {
     },
     {
       label: "Auction",
-      href: "/residnt/auction",
+      href: "/resident/auction",
       icon: <IconFunction className="text-neutral-800 dark:text-neutral-200" />,
     },
     {

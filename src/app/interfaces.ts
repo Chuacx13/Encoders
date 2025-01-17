@@ -39,6 +39,7 @@ export interface Resident {
   purchasedItems: Array<number>;
   voucher: Array<number>;
   voucherPoints: number;
+  specialItems: Array<string>;
 }
 
 export interface BillboardType {
@@ -71,6 +72,7 @@ export interface SpecialItem {
   status: "available" | "sold";
   highestBidderId: string;
   bidderName: string;
+  
 }
 
 export interface Auction {
