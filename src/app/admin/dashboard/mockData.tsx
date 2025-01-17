@@ -52,24 +52,10 @@ export interface Product {
 export const mockProducts: Product[] = [
     {
       productId: "prod1",
-      name: "Laptop",
-      price: 1500,
+      name: "Strawberries",
+      price: 5,
       rating: 4.5,
       stockQuantity: 10,
-    },
-    {
-      productId: "prod2",
-      name: "Smartphone",
-      price: 800,
-      rating: 4.7,
-      stockQuantity: 20,
-    },
-    {
-      productId: "prod3",
-      name: "Headphones",
-      price: 150,
-      rating: 4.3,
-      stockQuantity: 50,
     },
   ];
   

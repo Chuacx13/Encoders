@@ -81,14 +81,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       ),
     },
     {
-      label: "Mangage Tasks",
+      label: "Manage Tasks",
       href: "/admin/tasks",
       icon: (
         <IconClipboardText className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
-      label: "Mangage Auction",
+      label: "Manage Auction",
       href: "/admin/manage-auction",
       icon: (
         <IconHammer className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />

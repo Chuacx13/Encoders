@@ -43,7 +43,7 @@ const CardPopularProducts = () => {
             >
               <div className="flex items-center gap-3">
                 <Image
-                  src={"/react.svg"}
+                  src={"https://cdn.nyallergy.com/wp-content/uploads/square-1432664914-strawberry-facts1.jpeg"}
                   alt={product.name}
                   width={48}
                   height={48}

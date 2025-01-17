@@ -1,19 +1,36 @@
+"use client";
+
 import Gallery from "@/app/(components)/Gallery";
 import Info from "@/app/(components)/Info";
 import ProductList from "@/app/(components)/ProductList";
 import Container from "@/app/(components)/ui/Container";
 import { getAllItems, getItemById } from "@/app/api";
+import { Item } from "@/app/interfaces";
+import { Params } from "next/dist/server/request/params";
 
-type Params = { productId: string };
+import { useEffect, useState } from "react";
 
-const ProductPage = async ({ params }: { params: Promise<Params> }) => {
-  const { productId } = await params; // Unwrap the params Promise
-  const allItems = await getAllItems();
-  const product = await getItemById(productId);
-  const suggestProducts = allItems.filter(
-    (item) =>
-      item.category.id === product?.category.id && item.id !== Number(productId)
-  );
+const ProductPage = ({ params }: { params: Promise<Params> }) => {
+  const [product, setProduct] = useState<Item | null>(null);
+  const [suggestProducts, setSuggestProducts] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { productId } = await params;
+      if (typeof productId === "string") {
+        const allItems = await getAllItems();
+        const product = await getItemById(productId);
+        const suggestProducts = allItems.filter(
+          (item) =>
+            item.category.id === product?.category.id &&
+            item.id !== Number(productId)
+        );
+        setProduct(product);
+        setSuggestProducts(suggestProducts);
+      }
+    };
+    fetchData();
+  }, [params]);
 
   return (
     <div className="bg-white">
