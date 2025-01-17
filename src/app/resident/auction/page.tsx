@@ -141,45 +141,6 @@ const AuctionSystem: React.FC = () => {
     }
   };
 
-  const processSoldItems = async () => {
-    try {
-      const specialItemsCollection = collection(db, "specialItems");
-      const specialItemsSnapshot = await getDocs(specialItemsCollection);
-      const itemsToProcess = specialItemsSnapshot.docs
-        .map((doc) => ({ id: doc.id, ...doc.data() } as SpecialItem))
-        .filter((item) => item.highestBidderId && item.status !== "sold");
-  
-      for (const item of itemsToProcess) {
-        const { highestBidderId, id } = item;
-  
-        const residentDocRef = doc(db, "residents", highestBidderId);
-        const residentSnapshot = await getDoc(residentDocRef);
-  
-        if (residentSnapshot.exists()) {
-          const residentData = residentSnapshot.data();
-          const updatedSpecialItems = [...(residentData.specialItems || []), id];
-  
-          await updateDoc(residentDocRef, {
-            specialItems: updatedSpecialItems,
-          });
-  
-          const specialItemDocRef = doc(db, "specialItems", id);
-          await updateDoc(specialItemDocRef, {
-            status: "sold",
-          });
-  
-          console.log(`Item ${id} marked as sold and assigned to ${residentData.name}`);
-        }
-      }
-  
-      alert("Sold items processed successfully!");
-    } catch (error) {
-      console.error("Error processing sold items:", error);
-      alert("Failed to process sold items.");
-    }
-  };
-  
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header userUid={userUid} userName={userName} voucherPoints={voucherPoints} />
@@ -201,12 +162,6 @@ const AuctionSystem: React.FC = () => {
 
       <footer className="bg-gray-800 text-white py-4 text-center">
         <p className="text-sm">Auction System © 2025. All Rights Reserved.</p>
-        <button
-          onClick={processSoldItems}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-        >
-          Process Sold Items
-        </button>
       </footer>
     </div>
   );
